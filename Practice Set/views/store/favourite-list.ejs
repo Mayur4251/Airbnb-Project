@@ -1,0 +1,89 @@
+<%- include('../partials/head') %>
+
+<!-- ✅ Add Tailwind CDN and Font Awesome -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body class="bg-gray-100">
+
+  <!-- ✅ Include Navigation -->
+  <%- include('../partials/nav') %>
+
+  <main class="container mx-auto mt-10 max-w-6xl">
+    <div class="mb-8">
+      <h1 class="text-4xl font-extrabold text-gray-800 mb-2 text-center">Your Favourites</h1>
+      <p class="text-gray-600 text-center">Homes you've saved and want to remember</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <% if (favouriteHomes && favouriteHomes.length > 0) { %>
+        <% favouriteHomes.forEach(home => { %>
+          <div class="bg-white rounded-xl shadow-md overflow-hidden group relative hover:shadow-xl transition-shadow">
+            
+            <!-- Image with overlay -->
+            <a href="/homes/<%= home._id %>" class="block relative overflow-hidden">
+                  <img src="<%= (home.photo && home.photo.length) ? ('/uploads/' + home.photo[0]) : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
+                    alt="<%= home.houseName %>"
+                    class="w-full h-52 sm:h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+
+              <!-- Rating overlay -->
+              <div class="absolute right-3 bottom-3 bg-white bg-opacity-90 rounded-full px-3 py-1 flex items-center gap-1 shadow">
+                <i class="fas fa-star text-yellow-400 text-sm"></i>
+                <span class="text-sm font-semibold text-gray-800"><%= home.rating || '—' %></span>
+              </div>
+            </a>
+            
+            <!-- Card Content -->
+            <div class="p-5">
+              <h3 class="text-lg font-bold text-gray-900 mb-1 truncate">
+                <%= home.houseName %>
+              </h3>
+
+              <p class="text-sm text-gray-600 mb-3 flex items-center">
+                <i class="fas fa-map-marker-alt mr-2 text-red-500 text-xs"></i>
+                <%= home.location %>
+              </p>
+
+              <!-- Price -->
+              <div class="mb-4">
+                <span class="text-2xl font-extrabold text-red-600">
+                  ₹<%= home.price %>
+                </span>
+                <span class="text-sm text-gray-500"> / night</span>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex flex-col gap-2">
+                <a href="/homes/<%= home._id %>" class="w-full py-2 px-3 text-center text-sm rounded-md bg-red-500 text-white hover:bg-red-600 transition font-medium">
+                  View Details
+                </a>
+                
+                <form action="/favourites/delete/<%= home._id %>" method="POST" class="w-full">
+                  <button type="submit" class="w-full py-2 px-3 text-sm rounded-md border border-red-300 text-red-600 hover:bg-red-50 transition font-medium">
+                    <i class="fas fa-trash mr-1"></i>Remove
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="col-span-full">
+          <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-12 text-center">
+            <div class="text-6xl text-gray-300 mb-4">
+              <i class="fas fa-heart-broken"></i>
+            </div>
+            <p class="text-gray-600 text-lg mb-4">No favourites yet</p>
+            <p class="text-gray-500 mb-6">Start exploring and save homes you love.</p>
+            <a href="/homes" class="inline-block px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-medium">
+              Explore Homes
+            </a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </main>
+
+</body>
+</html>

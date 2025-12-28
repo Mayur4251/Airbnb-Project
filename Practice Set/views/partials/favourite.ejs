@@ -1,0 +1,9 @@
+<div class="flex justify-center space-x-4 mt-6">
+  <form action="/favourites" method="POST">
+    <button type="submit"
+      class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-11 rounded-lg transition">
+      Add to Favorites
+    </button>
+    <input type="hidden" name="id" value="<%= home._id %>">
+  </form>
+</div>

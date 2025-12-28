@@ -1,0 +1,151 @@
+<%- include('../partials/head') %>
+
+  <!-- ✅ Add Tailwind CDN and Font Awesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  </head>
+
+  <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex flex-col">
+
+    <!-- ✅ Include Navigation -->
+    <%- include('../partials/nav') %>
+
+    <!-- ✅ Main Content -->
+    <main class="flex-grow py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+          <div class="inline-block p-4 bg-red-100 rounded-full mb-4">
+            <i class="fas fa-home text-red-500 text-3xl"></i>
+          </div>
+          <h1 class="text-4xl font-bold text-gray-900 mb-2">
+            <%= editing ? "Edit Your Listing" : "List Your Home" %>
+          </h1>
+          <p class="text-lg text-gray-600">
+            <%= editing ? "Update your home details to attract more guests" : "Share your home and start earning with Airbnb" %>
+          </p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+          <div class="bg-gradient-to-r from-red-500 to-red-400 px-8 py-6">
+            <h2 class="text-2xl font-semibold text-white flex items-center gap-2">
+              <i class="fas <%= editing ? 'fa-edit' : 'fa-plus-circle' %>"></i>
+              <%= editing ? "Update Home Details" : "Home Information" %>
+            </h2>
+          </div>
+
+          <form action="/host/<%= editing ? 'edit-home' : 'add-home' %>" method="POST" class="p-8 sm:p-10" enctype="multipart/form-data">
+
+            <input type="hidden" name="id" value="<%= editing ? home._id : '' %>">
+
+            <!-- Row 1: House Name & Location -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+              <!-- House Name -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-door-open text-red-500 mr-2"></i>House Name
+                </label>
+                <input type="text" name="houseName" value="<%= editing ? home.houseName : ''%>"
+                  placeholder="Enter the House Name" required
+                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
+              </div>
+
+              <!-- Location -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Location
+                </label>
+                <input type="text" name="location" value="<%= editing ? home.location : ''%>"
+                  placeholder="Enter the Location" required
+                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
+              </div>
+            </div>
+
+            <!-- Row 2: Rating & Price -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+              <!-- Rating -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-star text-yellow-500 mr-2"></i>Rating (1-5)
+                </label>
+                <input type="number" name="rating" value="<%= editing ? home.rating : ''%>" 
+                  placeholder="Give the ratings" min="1" max="5" step="0.1" required
+                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
+                <p class="text-xs text-gray-500 mt-1">Enter a rating between 1 and 5</p>
+              </div>
+
+              <!-- Price -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  ₹</i>Price per Night
+                </label>
+                <div class="relative">
+                  <span class="absolute left-4 top-3 text-gray-500 font-semibold"></span>
+                  <input type="number" name="price" value="<%= editing ? home.price : ''%>" 
+                    placeholder="Enter the Price" min="1" step="0.01" required
+                    class="w-full pl-8 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Photo URL -->
+            <div class="mb-6">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-image text-blue-500 mr-2"></i>Photo file
+              </label>
+               <!-- //In this we have choosen file type, multiple means user can choose multiple files, and it can allow only those files which i mentioned in the accept -->
+              <input type="file" name="photos" multiple accept="image/jpg, image/jpeg, image/png" <%= editing ? '' : 'required' %>
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
+              <p class="text-xs text-gray-500 mt-1">Use a high-quality image (JPG, PNG, JPEG)</p>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-8">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-pencil-alt text-purple-500 mr-2"></i>Description
+              </label>
+              <textarea name="description" placeholder="Describe your home... Mention amenities, special features, house rules, etc." 
+                rows="5" required
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200 resize-none"><%= editing ? home.description : '' %></textarea>
+              <p class="text-xs text-gray-500 mt-1">Be descriptive! This helps guests choose your home.</p>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex gap-4">
+              <button type="submit" 
+                class="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold py-3 px-6 rounded-lg hover:shadow-lg hover:from-red-600 hover:to-red-700 transition duration-300 flex items-center justify-center gap-2">
+                <i class="fas <%= editing ? 'fa-check-circle' : 'fa-plus-circle' %>"></i>
+                <%= editing ? 'Update Home' : 'Add Home' %>
+              </button>
+              <a href="/host/host-home-list" 
+                class="flex-1 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center justify-center gap-2">
+                <i class="fas fa-times-circle"></i>
+                Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+
+        <!-- Info Section -->
+        <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="bg-blue-50 rounded-xl p-6 border-l-4 border-blue-500">
+            <h3 class="font-bold text-blue-900 mb-2 flex items-center gap-2">
+              <i class="fas fa-lightbulb"></i> Pro Tip
+            </h3>
+            <p class="text-sm text-blue-700">Use clear, high-quality photos and write detailed descriptions to increase booking rates.</p>
+          </div>
+          <div class="bg-green-50 rounded-xl p-6 border-l-4 border-green-500">
+            <h3 class="font-bold text-green-900 mb-2 flex items-center gap-2">
+              <i class="fas fa-check-circle"></i> Requirements
+            </h3>
+            <p class="text-sm text-green-700">All fields are required. Ensure your pricing is competitive and rating is accurate.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </body>
+
+  </html>

@@ -1,0 +1,145 @@
+<%- include('../partials/head') %>
+
+  <head>
+    <!-- Tailwind + FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  </head>
+
+  <body class="bg-gradient-to-br from-gray-100 to-gray-50 min-h-screen">
+
+    <!-- Navigation -->
+    <%- include('../partials/nav') %>
+
+    <main class="container mx-auto mt-10 mb-10 px-4">
+      <% if (home) { %>
+
+        <!-- Back Button -->
+        <div class="mb-6">
+          <a href="/homes" class="inline-flex items-center gap-2 text-red-500 hover:text-red-600 font-medium">
+            <i class="fas fa-arrow-left"></i> Back to Homes
+          </a>
+        </div>
+
+        <!-- Detail Card -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+
+          <!-- Image Section -->
+          <div class="relative overflow-hidden h-96 bg-gray-200">
+            <img
+              src="<%= (home.photo && home.photo.length) ? ('/uploads/' + home.photo[0]) : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
+              alt="<%= home.houseName %>" 
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            
+            <!-- Rating Badge -->
+            <div class="absolute top-4 right-4 bg-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2">
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <span class="font-semibold text-gray-800 text-sm"><%= home.rating || 'N/A' %></span>
+            </div>
+          </div>
+
+          <!-- Content Section -->
+          <div class="p-8">
+
+            <!-- Header -->
+            <div class="mb-8">
+              <h1 class="text-4xl font-extrabold text-gray-900 mb-3">
+                <%= home.houseName %>
+              </h1>
+              
+              <p class="text-lg text-gray-600 flex items-center gap-2">
+                <i class="fas fa-map-marker-alt text-red-500"></i>
+                <%= home.location %>
+              </p>
+            </div>
+
+            <!-- Price & Host -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 pb-8 border-b border-gray-200">
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Price per night</p>
+                <p class="text-3xl font-extrabold text-red-600">
+                  ₹<%= home.price %>
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Host</p>
+                <p class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                  <i class="fas fa-user-circle text-gray-400"></i>
+                  <%= home.hostName || home.host || 'Unknown Host' %>
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Rating</p>
+                <div class="flex items-center gap-2">
+                  <div class="flex items-center">
+                    <% for (let i = 0; i < 5; i++) { %>
+                      <i class="fas fa-star <% if (i < Math.floor(home.rating || 0)) { %>text-yellow-400<% } else { %>text-gray-300<% } %>"></i>
+                    <% } %>
+                  </div>
+                  <span class="text-gray-700 font-semibold">(<%= home.rating || '0' %>)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description (if available) -->
+            <% if (home.description) { %>
+              <div class="mb-8">
+                <h2 class="text-xl font-bold text-gray-900 mb-1 text-center">About this home</h2>
+                <p class="text-gray-600 leading-relaxed">
+                  <%= home.description %>
+                </p>
+              </div>
+            <% } %>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-1">
+              <div class="flex-1">
+                <%- include('../partials/favourite') %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <!-- Amenities (if available) -->
+          <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Amenities</h3>
+            <ul class="space-y-2 text-gray-600">
+              <li class="flex items-center gap-2"><i class="fas fa-wifi text-red-500"></i> Free WiFi</li>
+              <li class="flex items-center gap-2"><i class="fas fa-tv text-red-500"></i> TV</li>
+              <li class="flex items-center gap-2"><i class="fas fa-snowflake text-red-500"></i> Air Conditioning</li>
+              <li class="flex items-center gap-2"><i class="fas fa-utensils text-red-500"></i> Kitchen</li>
+            </ul>
+          </div>
+
+          <!-- House Rules (if available) -->
+          <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">House Rules</h3>
+            <ul class="space-y-2 text-gray-600">
+              <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Check-in: 3 PM</li>
+              <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Check-out: 11 AM</li>
+              <li class="flex items-center gap-2"><i class="fas fa-ban text-red-500"></i> No smoking</li>
+              <li class="flex items-center gap-2"><i class="fas fa-ban text-red-500"></i> No pets</li>
+            </ul>
+          </div>
+        </div>
+
+      <% } else { %>
+        <!-- Not Found State -->
+        <div class="bg-white rounded-xl shadow-md p-12 text-center">
+          <div class="text-6xl text-gray-300 mb-4">
+            <i class="fas fa-home"></i>
+          </div>
+          <p class="text-gray-600 text-lg mb-6">Home details not found.</p>
+          <a href="/homes" class="inline-block px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium">
+            Back to Homes
+          </a>
+        </div>
+      <% } %>
+    </main>
+
+  </body>
+  </html>

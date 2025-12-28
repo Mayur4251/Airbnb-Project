@@ -1,0 +1,150 @@
+<%- include('../partials/head') %>
+  </head>
+  <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <%- include('../partials/nav') %>
+
+    <main class="container mx-auto mt-8 mb-12 px-4 md:px-6">
+      <div class="max-w-3xl mx-auto">
+        <!-- Header Section -->
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center justify-center w-14 h-14 bg-red-100 rounded-full mb-4">
+            <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-4m0 0l4 4m-4-4V3" />
+            </svg>
+          </div>
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900">List Your Home</h1>
+          <p class="text-gray-600 mt-3 text-lg">Share your space and start earning with Airbnb</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+          <!-- Progress indicator -->
+          <div class="h-1 bg-gradient-to-r from-red-500 to-red-600"></div>
+
+          <form action="/host/add-home" method="POST" class="p-8 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <form action="/host/add-home" method="POST" class="p-8 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Title and Location Section -->
+        <div class="col-span-1 md:col-span-2">
+          <h2 class="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-3">
+            <span class="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
+            Basic Information
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Home Title</label>
+              <input type="text" name="houseName" placeholder="e.g. Cozy 2BR near city center" required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition duration-200 hover:border-gray-400" />
+              <p class="text-xs text-gray-500 mt-1">Give your home an appealing, descriptive title</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
+              <input type="text" name="location" placeholder="City, State or address" required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition duration-200 hover:border-gray-400" />
+              <p class="text-xs text-gray-500 mt-1">Where is your property located?</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="col-span-1 md:col-span-2">
+          <h2 class="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-3">
+            <span class="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
+            Description
+          </h2>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Tell guests about your place</label>
+          <textarea name="description" rows="4" placeholder="Share a few details about your place - amenities, house rules, nearby attractions, etc."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition duration-200 hover:border-gray-400 resize-none"></textarea>
+          <p class="text-xs text-gray-500 mt-1">Be detailed - guests love to know what to expect!</p>
+        </div>
+
+        <!-- Pricing and Rating Section -->
+        <div class="col-span-1 md:col-span-2">
+          <h2 class="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-3">
+            <span class="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
+            Pricing & Rating
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Price per Night</label>
+              <div class="relative">
+                <span class="absolute left-4 top-3 text-gray-500 font-medium">₹</span>
+                <input type="number" name="price" placeholder="0.00" required min="0" step="0.01"
+                  class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition duration-200 hover:border-gray-400" />
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Price per night</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Rating (Optional)</label>
+              <div class="relative">
+                <input type="number" name="rating" placeholder="4.5" min="0" max="5" step="0.1"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition duration-200 hover:border-gray-400" />
+                <span class="absolute right-4 top-3 text-gray-500 font-medium">/ 5</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Your property rating</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo Section -->
+        <div class="col-span-1 md:col-span-2">
+          <h2 class="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-3">
+            <span class="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</span>
+            Photo
+          </h2>
+          <label class="block text-sm font-semibold text-gray-700 mb-3">Add a Cover Photo</label>
+          <div class="flex items-center gap-3 mb-4">
+            <input type="url" id="photoUrl" name="photoUrl" placeholder="https://example.com/photo.jpg"
+              class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition duration-200 hover:border-gray-400" />
+            <button type="button" id="previewBtn" class="px-5 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-200 shadow-sm hover:shadow-md">Preview</button>
+          </div>
+          <p class="text-xs text-gray-500 mb-4">Use a high-quality, well-lit photo of your property</p>
+
+          <div id="preview" class="hidden">
+            <div class="w-full h-64 bg-gray-50 rounded-xl overflow-hidden border-2 border-gray-200 flex items-center justify-center shadow-md">
+              <img id="previewImg" src="" alt="preview" class="object-cover w-full h-full" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="col-span-1 md:col-span-2 flex items-center justify-between gap-4 pt-6 border-t border-gray-200 mt-4">
+          <a href="/host/host-home-list" class="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition duration-200">Cancel</a>
+          <button type="submit" class="px-8 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition duration-200 shadow-lg hover:shadow-xl">Create Listing</button>
+        </div>
+
+        </form>
+        </div>
+    </main>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+        var btn = document.getElementById('previewBtn');
+        var urlInput = document.getElementById('photoUrl');
+        var preview = document.getElementById('preview');
+        var img = document.getElementById('previewImg');
+        
+        if (btn) {
+          btn.addEventListener('click', function(e){
+            e.preventDefault();
+            var url = urlInput.value.trim();
+            if (!url) {
+              alert('Please enter a valid image URL');
+              return;
+            }
+            img.onload = function() {
+              preview.classList.remove('hidden');
+            };
+            img.onerror = function() {
+              alert('Failed to load image. Please check the URL and try again.');
+            };
+            img.src = url;
+          });
+        }
+      });
+    </script>
+
+  </body>
+  </html>
