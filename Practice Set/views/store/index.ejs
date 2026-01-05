@@ -4,29 +4,116 @@
 </head>
 
 <body class="bg-gray-100">
-
   <%- include('../partials/nav') %>
 
-  <main class="container mx-auto bg-white shadow-lg rounded-lg p-8 mt-10 max-w-5xl">
-    <h2 class="text-3xl text-red-500 font-bold text-center mb-6">
-      Welcome to airbnb index page:
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <h2 class="text-4xl text-red-500 font-bold text-center mb-8">
+      Welcome to EliteDwell
     </h2>
 
-    <div class="text-center mb-10">
+    <!-- Search and Filter Section -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <form method="GET" action="/" class="space-y-4">
+        <!-- Search Bar -->
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fas fa-search text-red-500 mr-2"></i>Search
+            </label>
+            <input type="text" name="search" value="<%= search || '' %>" 
+              placeholder="Search by name, location..."
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none">
+          </div>
+        </div>
+
+        <!-- Filters Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Price Range -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Min Price</label>
+            <input type="number" name="minPrice" value="<%= minPrice || '' %>" placeholder="Min"
+              class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Max Price</label>
+            <input type="number" name="maxPrice" value="<%= maxPrice || '' %>" placeholder="Max"
+              class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none">
+          </div>
+
+          <!-- Rating -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Min Rating</label>
+            <select name="minRating" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none">
+              <option value="">Any</option>
+              <option value="4.5" <%= minRating == 4.5 ? 'selected' : '' %>>4.5+</option>
+              <option value="4" <%= minRating == 4 ? 'selected' : '' %>>4+</option>
+              <option value="3" <%= minRating == 3 ? 'selected' : '' %>>3+</option>
+            </select>
+          </div>
+
+          <!-- Property Type -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Property Type</label>
+            <select name="propertyType" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none">
+              <option value="">All Types</option>
+              <option value="house" <%= propertyType === 'house' ? 'selected' : '' %>>House</option>
+              <option value="apartment" <%= propertyType === 'apartment' ? 'selected' : '' %>>Apartment</option>
+              <option value="villa" <%= propertyType === 'villa' ? 'selected' : '' %>>Villa</option>
+              <option value="studio" <%= propertyType === 'studio' ? 'selected' : '' %>>Studio</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Amenities -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Amenities</label>
+          <div class="flex flex-wrap gap-2">
+            <% const amenitiesList = ['wifi', 'parking', 'pool', 'ac', 'kitchen', 'tv']; %>
+            <% amenitiesList.forEach(amenity => { %>
+              <label class="flex items-center cursor-pointer px-3 py-1 border-2 border-gray-300 rounded-full hover:border-red-500 transition">
+                <input type="checkbox" name="amenities" value="<%= amenity %>" 
+                  <%= amenities && amenities.includes(amenity) ? 'checked' : '' %>
+                  class="mr-2 accent-red-500">
+                <span class="text-sm text-gray-700 capitalize"><%= amenity %></span>
+              </label>
+            <% }) %>
+          </div>
+        </div>
+
+        <!-- Sort and Submit -->
+        <div class="flex gap-4 items-end">
+          <div class="flex-1">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>
+            <select name="sortBy" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none">
+              <option value="newest" <%= sortBy === 'newest' ? 'selected' : '' %>>Newest First</option>
+              <option value="priceLow" <%= sortBy === 'priceLow' ? 'selected' : '' %>>Price: Low to High</option>
+              <option value="priceHigh" <%= sortBy === 'priceHigh' ? 'selected' : '' %>>Price: High to Low</option>
+              <option value="rating" <%= sortBy === 'rating' ? 'selected' : '' %>>Highest Rated</option>
+            </select>
+          </div>
+          <button type="submit" class="bg-red-500 text-white px-8 py-2 rounded-lg font-semibold hover:bg-red-600 transition">
+            <i class="fas fa-filter mr-2"></i>Apply Filters
+          </button>
+          <a href="/" class="bg-gray-500 text-white px-8 py-2 rounded-lg font-semibold hover:bg-gray-600 transition">
+            <i class="fas fa-times mr-2"></i>Clear
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Add Home Button -->
+    <div class="text-center mb-6">
       <a href="/host/add-home" 
          class="bg-red-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-red-600 transition duration-300 inline-block shadow-md">
-        + Add New Home
+        <i class="fas fa-plus mr-2"></i>Add New Home
       </a>
     </div>
 
     <!-- Homes Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
       <% if (registeredHomes && registeredHomes.length > 0) { %>
         <% registeredHomes.forEach(home => { %>
-
-          <div class="bg-white rounded-xl shadow-lg overflow-hidden group relative">
-
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden group relative hover:shadow-xl transition">
             <!-- Home Image -->
             <a href="/homes/<%= home._id %>" class="block relative">
               <img
@@ -34,19 +121,28 @@
                 alt="<%= home.houseName %>"
                 class="w-full h-52 sm:h-48 object-cover transition-transform duration-300 group-hover:scale-105"
               >
-
-              <!-- overlay with rating on hover -->
+              <!-- Rating Badge -->
               <div class="absolute right-3 bottom-3 bg-white bg-opacity-90 rounded-full px-3 py-1 flex items-center gap-2 shadow">
                 <i class="fas fa-star text-yellow-400"></i>
-                <span class="text-sm font-semibold text-gray-800"><%= home.rating || '—' %></span>
+                <span class="text-sm font-semibold text-gray-800"><%= home.rating ? home.rating.toFixed(1) : '—' %></span>
               </div>
             </a>
 
             <!-- Card Content -->
             <div class="p-5">
               <h3 class="text-lg font-bold text-gray-900 mb-1 truncate"><%= home.houseName %></h3>
-
-              <p class="text-sm text-gray-600 mb-3 flex items-center"><i class="fas fa-map-marker-alt mr-2 text-red-500"></i><%= home.location %></p>
+              <p class="text-sm text-gray-600 mb-2 flex items-center">
+                <i class="fas fa-map-marker-alt mr-2 text-red-500"></i><%= home.location %>
+              </p>
+              
+              <!-- Property Details -->
+              <% if (home.bedrooms || home.bathrooms || home.maxGuests) { %>
+                <div class="flex gap-3 text-xs text-gray-500 mb-3">
+                  <% if (home.bedrooms) { %><span><i class="fas fa-bed mr-1"></i><%= home.bedrooms %> beds</span><% } %>
+                  <% if (home.bathrooms) { %><span><i class="fas fa-bath mr-1"></i><%= home.bathrooms %> baths</span><% } %>
+                  <% if (home.maxGuests) { %><span><i class="fas fa-users mr-1"></i><%= home.maxGuests %> guests</span><% } %>
+                </div>
+              <% } %>
 
               <div class="mb-4">
                 <span class="text-2xl font-extrabold text-red-600">₹<%= home.price %></span>
@@ -55,33 +151,54 @@
 
               <!-- Action Buttons -->
               <div class="flex flex-col gap-2">
-                <a href="/homes/<%= home._id %>" class="w-full py-2 px-4 rounded-md bg-red-500 text-white text-center font-medium hover:bg-red-600 transition">View Details</a>
-
+                <a href="/homes/<%= home._id %>" class="w-full py-2 px-4 rounded-md bg-red-500 text-white text-center font-medium hover:bg-red-600 transition">
+                  View Details
+                </a>
                 <a href="/homes/<%= home._id %>/book" class="w-full py-2 px-4 rounded-md bg-green-500 text-white text-center font-medium hover:bg-green-600 transition">
                   <i class="fas fa-calendar-check mr-1"></i>Book Now
                 </a>
               </div>
-
-              <!-- host info -->
-              <div class="mt-4 flex items-center text-sm text-gray-600">
-                <i class="fas fa-user mr-2"></i>
-                <span><%= home.hostName || home.host || 'Host' %></span>
-              </div>
             </div>
           </div>
-
         <% }) %>
       <% } else { %>
-
-        <!-- No Homes -->
         <div class="col-span-full">
           <p class="text-gray-500 text-center text-lg py-12 border-2 border-dashed border-gray-300 rounded-lg">
-            No homes registered yet. Click "+ Add New Home" above to get started!
+            No homes found. Try adjusting your filters or <a href="/host/add-home" class="text-red-500 hover:underline">add a new home</a>!
           </p>
         </div>
-
       <% } %>
     </div>
+
+    <!-- Pagination -->
+    <% if (totalPages > 1) { %>
+      <div class="flex justify-center items-center gap-2 mt-8">
+        <% if (hasPrevPage) { %>
+          <a href="/?page=<%= prevPage %><%= search ? '&search=' + search : '' %><%= minPrice ? '&minPrice=' + minPrice : '' %><%= maxPrice ? '&maxPrice=' + maxPrice : '' %><%= sortBy ? '&sortBy=' + sortBy : '' %>" 
+             class="px-4 py-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition">
+            <i class="fas fa-chevron-left"></i> Previous
+          </a>
+        <% } %>
+        
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <% if (i === currentPageNum) { %>
+            <span class="px-4 py-2 bg-red-500 text-white rounded-lg font-semibold"><%= i %></span>
+          <% } else { %>
+            <a href="/?page=<%= i %><%= search ? '&search=' + search : '' %><%= minPrice ? '&minPrice=' + minPrice : '' %><%= maxPrice ? '&maxPrice=' + maxPrice : '' %><%= sortBy ? '&sortBy=' + sortBy : '' %>" 
+               class="px-4 py-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition">
+              <%= i %>
+            </a>
+          <% } %>
+        <% } %>
+
+        <% if (hasNextPage) { %>
+          <a href="/?page=<%= nextPage %><%= search ? '&search=' + search : '' %><%= minPrice ? '&minPrice=' + minPrice : '' %><%= maxPrice ? '&maxPrice=' + maxPrice : '' %><%= sortBy ? '&sortBy=' + sortBy : '' %>" 
+             class="px-4 py-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition">
+            Next <i class="fas fa-chevron-right"></i>
+          </a>
+        <% } %>
+      </div>
+    <% } %>
   </main>
 
 </body>

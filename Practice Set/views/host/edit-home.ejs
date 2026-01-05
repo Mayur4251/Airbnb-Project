@@ -23,7 +23,7 @@
             <%= editing ? "Edit Your Listing" : "List Your Home" %>
           </h1>
           <p class="text-lg text-gray-600">
-            <%= editing ? "Update your home details to attract more guests" : "Share your home and start earning with Airbnb" %>
+            <%= editing ? "Update your home details to attract more guests" : "Share your home and start earning with EliteDwell" %>
           </p>
         </div>
 
@@ -63,30 +63,81 @@
               </div>
             </div>
 
-            <!-- Row 2: Rating & Price -->
+            <!-- Row 2: Price & Property Type -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-              <!-- Rating -->
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  <i class="fas fa-star text-yellow-500 mr-2"></i>Rating (1-5)
-                </label>
-                <input type="number" name="rating" value="<%= editing ? home.rating : ''%>" 
-                  placeholder="Give the ratings" min="1" max="5" step="0.1" required
-                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
-                <p class="text-xs text-gray-500 mt-1">Enter a rating between 1 and 5</p>
-              </div>
-
               <!-- Price -->
               <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  ₹</i>Price per Night
+                  <i class="fas fa-rupee-sign text-green-500 mr-2"></i>Price per Night
                 </label>
-                <div class="relative">
-                  <span class="absolute left-4 top-3 text-gray-500 font-semibold"></span>
-                  <input type="number" name="price" value="<%= editing ? home.price : ''%>" 
-                    placeholder="Enter the Price" min="1" step="0.01" required
-                    class="w-full pl-8 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
-                </div>
+                <input type="number" name="price" value="<%= editing ? home.price : ''%>" 
+                  placeholder="Enter the Price" min="1" step="0.01" required
+                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
+              </div>
+
+              <!-- Property Type -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-building text-blue-500 mr-2"></i>Property Type
+                </label>
+                <select name="propertyType" required
+                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200">
+                  <option value="house" <%= editing && home.propertyType === 'house' ? 'selected' : '' %>>House</option>
+                  <option value="apartment" <%= editing && home.propertyType === 'apartment' ? 'selected' : '' %>>Apartment</option>
+                  <option value="villa" <%= editing && home.propertyType === 'villa' ? 'selected' : '' %>>Villa</option>
+                  <option value="studio" <%= editing && home.propertyType === 'studio' ? 'selected' : '' %>>Studio</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 3: Bedrooms, Bathrooms, Max Guests -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+              <!-- Bedrooms -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-bed text-purple-500 mr-2"></i>Bedrooms
+                </label>
+                <input type="number" name="bedrooms" value="<%= editing ? (home.bedrooms || 1) : '1'%>" 
+                  placeholder="Bedrooms" min="1" required
+                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
+              </div>
+
+              <!-- Bathrooms -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-bath text-blue-500 mr-2"></i>Bathrooms
+                </label>
+                <input type="number" name="bathrooms" value="<%= editing ? (home.bathrooms || 1) : '1'%>" 
+                  placeholder="Bathrooms" min="1" step="0.5" required
+                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
+              </div>
+
+              <!-- Max Guests -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  <i class="fas fa-users text-orange-500 mr-2"></i>Max Guests
+                </label>
+                <input type="number" name="maxGuests" value="<%= editing ? (home.maxGuests || 2) : '2'%>" 
+                  placeholder="Max Guests" min="1" required
+                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
+              </div>
+            </div>
+
+            <!-- Amenities -->
+            <div class="mb-6">
+              <label class="block text-sm font-semibold text-gray-700 mb-3">
+                <i class="fas fa-check-circle text-green-500 mr-2"></i>Amenities
+              </label>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                <% const amenitiesList = ['wifi', 'parking', 'pool', 'ac', 'heating', 'kitchen', 'tv', 'washer', 'dryer', 'gym', 'balcony', 'garden']; %>
+                <% amenitiesList.forEach(amenity => { %>
+                  <label class="flex items-center cursor-pointer p-2 border-2 border-gray-200 rounded-lg hover:border-red-300 transition">
+                    <input type="checkbox" name="amenities" value="<%= amenity %>" 
+                      <%= editing && home.amenities && home.amenities.includes(amenity) ? 'checked' : '' %>
+                      class="mr-2 accent-red-500">
+                    <span class="text-sm text-gray-700 capitalize"><%= amenity %></span>
+                  </label>
+                <% }) %>
               </div>
             </div>
 

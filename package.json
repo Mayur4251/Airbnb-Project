@@ -10,14 +10,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^25.0.3",
     "autoprefixer": "^10.4.21",
     "nodemon": "^3.1.7",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.18"
+    "tailwindcss": "^3.4.18",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "body-parser": "^1.20.3",
+    "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^5.0.0",
     "ejs": "^3.1.10",
     "express": "^4.21.2",

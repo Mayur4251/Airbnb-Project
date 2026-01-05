@@ -1,0 +1,70 @@
+<%- include('../partials/head') %>
+  </head>
+
+  <body class="bg-gray-100">
+    <%- include('../partials/nav') %>
+
+      <main class="container mx-auto p-8">
+
+        <h1 class="text-3xl font-bold text-red-500 mb-8 text-center">
+          Past Bookings
+        </h1>
+
+        <% if (!pastBookings || pastBookings.length===0) { %>
+          <!-- NO PAST BOOKINGS -->
+          <div class="bg-white p-8 rounded-lg shadow text-center">
+            <p class="text-gray-600 text-lg">
+              You don’t have any past bookings yet.
+            </p>
+            <a href="/homes"
+              class="inline-block mt-4 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+              Browse Homes
+            </a>
+          </div>
+          <% } else { %>
+
+            <!-- PAST BOOKINGS LIST -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <% pastBookings.forEach(booking=> { %>
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                  <img src="/uploads/<%= booking.homeId.photo[0] %>" alt="<%= booking.homeId.houseName %>"
+                    class="w-full h-64 object-cover" />
+                  <div class="p-4">
+                    <h3 class="font-semibold text-lg">
+                      <%= booking.homeId.houseName %>
+                    </h3>
+
+                    <p class="text-gray-500">
+                      <i class="fa fa-map-marker-alt mr-1"></i>
+                      <%= booking.homeId.location %>
+                    </p>
+
+                    <p class="mt-2 text-sm">
+                      <strong>Check-in:</strong>
+                      <%= booking.checkInDate.toDateString() %>
+                    </p>
+
+                    <p class="text-sm">
+                      <strong>Check-out:</strong>
+                      <%= booking.checkOutDate.toDateString() %>
+                    </p>
+
+                    <p class="mt-2 font-semibold text-red-500">
+                      Total Paid: ₹ <%= booking.totalPrice %>
+                    </p>
+
+                    <a href="/homes/<%= booking.homeId._id %>/review"
+                      class="block mt-4 text-center px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                      Write Review
+                    </a>
+                  </div>
+                </div>
+                <% }) %>
+            </div>
+
+            <% } %>
+
+      </main>
+  </body>
+
+  </html>

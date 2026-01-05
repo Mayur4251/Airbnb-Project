@@ -15,10 +15,40 @@ const homeSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
-    required: true
+    default: 0
   },
   photo: [String],
-  description: String
+  description: String,
+  propertyType: {
+    type: String,
+    enum: ['apartment','house', 'villa','studio'],
+    default: 'house'
+  },
+  bedrooms: {
+    type: Number,
+    default: 1
+  },
+  bathrooms: {
+    type: Number,
+    default: 1
+  },
+  maxGuests: {
+    type: Number,
+    default: 2
+  },
+  amenities: [{
+    type: String,
+    enum: ['wifi', 'parking', 'pool', 'ac', 'heating', 'kitchen', 'tv', 'washer', 'dryer', 'gym', 'balcony', 'garden']
+  }],
+  hostId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  hostName: String,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 /*

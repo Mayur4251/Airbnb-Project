@@ -3,77 +3,121 @@
 
     <!-- Brand -->
     <a href="/" class="flex items-center gap-3 hover:opacity-90 transition duration-200">
-      <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-red-600 text-lg font-bold shadow-md">A</div>
-      <span class="font-bold text-white text-lg">Airbnb</span>
+      <div
+        class="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-red-600 text-lg font-bold shadow-md">
+        ED</div>
+      <span class="font-bold text-white text-lg">EliteDwell</span>
     </a>
 
     <!-- Desktop links -->
     <ul class="hidden md:flex items-center gap-1 ml-6 text-sm text-white">
-      
-      <% if (isLoggedIn) { %>
-        <% if (user && user.userType === 'host') { %>
-          <!-- Host Navigation -->
-          <li><a href="/host/host-home-list" class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-house-user"></i>
-            <span>Host Homes</span>
-          </a></li>
-          <li><a href="/host/add-home" class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-plus"></i>
-            <span>Add Home</span>
-          </a></li>
-        <% } else { %>
-          <!-- Guest Navigation (default for logged-in users) -->
-          <li><a href="/homes" class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-house"></i>
-            <span>Homes</span>
-          </a></li>
-          <li><a href="/favourites" class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-heart"></i>
-            <span>Favourites</span>
-          </a></li>
-          <li><a href="/bookings" class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
-            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v2H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v2H7V3a1 1 0 00-1-1zm0 5a2 2 0 002 2h8a2 2 0 012-2H6z" clip-rule="evenodd"></path></svg>
-            <span>Bookings</span>
-          </a></li>
-        <% } %>
-      <% } else { %>
-        <li><a href="/homes" class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
-          <i class="fa-solid fa-house"></i>
-          <span>Homes</span>
-        </a></li>
-      <% } %>
-    </ul>
 
+      <% if (isLoggedIn) { %>
+        <% if (user && user.userType==='host' ) { %>
+          <!-- Host Navigation -->
+          <li><a href="/host/host-home-list"
+              class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
+              <i class="fa-solid fa-house-user"></i>
+              <span>Host Homes</span>
+            </a></li>
+          <li><a href="/host/add-home"
+              class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
+              <i class="fa-solid fa-plus"></i>
+              <span>Add Home</span>
+            </a></li>
+          <% } else { %>
+            <!-- Guest Navigation (default for logged-in users) -->
+            <li><a href="/homes"
+                class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
+                <i class="fa-solid fa-house"></i>
+                <span>Homes</span>
+              </a></li>
+            <li><a href="/favourites"
+                class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
+                <i class="fa-solid fa-heart"></i>
+                <span>Favourites</span>
+              </a></li>
+            <li><a href="/bookings"
+                class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
+                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <path fill-rule="evenodd"
+                    d="M6 2a1 1 0 00-1 1v2H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v2H7V3a1 1 0 00-1-1zm0 5a2 2 0 002 2h8a2 2 0 012-2H6z"
+                    clip-rule="evenodd"></path>
+                </svg>
+                <span>Bookings</span>
+              </a></li>
+            <li><a href="/recently-viewed"
+                class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
+                <i class="fa-solid fa-history"></i>
+                <span>Recently Viewed</span>
+              </a></li>
+            <li>
+              <a href="/past-bookings"
+                class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>Past Bookings</span>
+              </a></li>
+
+            <% } %>
+              <% } else { %>
+                <li><a href="/homes"
+                    class="px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Homes</span>
+                  </a></li>
+                <% } %>
+    </ul>
     <!-- Right actions -->
     <div class="ml-auto flex items-center gap-3">
       <% if (!isLoggedIn) { %>
-        <a href="/login" class="text-sm px-4 py-2 rounded-lg border border-white text-white hover:bg-red-700 transition duration-200 flex items-center gap-2">
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+        <a href="/login"
+          class="text-sm px-4 py-2 rounded-lg border border-white text-white hover:bg-red-700 transition duration-200 flex items-center gap-2">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+          </svg>
           <span>Log in</span>
         </a>
-        <a href="/signup" class="text-sm px-4 py-2 rounded-lg bg-white text-red-600 font-semibold hover:bg-red-50 transition duration-200 flex items-center gap-2 shadow-md">
-          <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 12a1 1 0 101-2 1 1 0 001 2zm1-5a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+        <a href="/signup"
+          class="text-sm px-4 py-2 rounded-lg bg-white text-red-600 font-semibold hover:bg-red-50 transition duration-200 flex items-center gap-2 shadow-md">
+          <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+            <path
+              d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 12a1 1 0 101-2 1 1 0 001 2zm1-5a1 1 0 11-2 0 1 1 0 012 0z">
+            </path>
+          </svg>
           <span>Sign up</span>
         </a>
-      <% } else { %>
-        <a href="/profile" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 text-white">
-          <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
-          <span class="text-sm"><%= (typeof user !== 'undefined' && user && user.firstName) ? user.firstName : 'Account' %></span>
-        </a>
-        <form action="/logout" method="POST" class="inline">
-          <button type="submit" class="text-sm px-4 py-2 rounded-lg border border-white text-white hover:bg-red-700 transition duration-200 flex items-center gap-2">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-1"></path></svg>
-            <span>Logout</span>
-          </button>
-        </form>
-      <% } %>
+        <% } else { %>
+          <a href="/profile"
+            class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 text-white">
+            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd">
+              </path>
+            </svg>
+            <span class="text-sm">
+              <%= (typeof user !=='undefined' && user && user.firstName) ? user.firstName : 'Account' %>
+            </span>
+          </a>
+          <form action="/logout" method="POST" class="inline">
+            <button type="submit"
+              class="text-sm px-4 py-2 rounded-lg border border-white text-white hover:bg-red-700 transition duration-200 flex items-center gap-2">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-1"></path>
+              </svg>
+              <span>Logout</span>
+            </button>
+          </form>
+          <% } %>
 
-      <!-- Mobile menu button -->
-      <button id="nav-toggle" class="md:hidden p-2 rounded-lg text-white hover:bg-red-700 transition duration-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
+            <!-- Mobile menu button -->
+            <button id="nav-toggle"
+              class="md:hidden p-2 rounded-lg text-white hover:bg-red-700 transition duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
     </div>
 
   </nav>
@@ -82,33 +126,36 @@
   <div id="nav-mobile" class="hidden md:hidden border-t border-red-400 bg-red-500">
     <div class="px-4 py-3 flex flex-col gap-2 text-white">
       <% if (isLoggedIn) { %>
-        <% if (userType === 'host') { %>
+        <% if (userType==='host' ) { %>
           <!-- Host Mobile Menu -->
           <a href="/host/host-home-list" class="py-2 hover:opacity-80 transition duration-200">Host Homes</a>
           <a href="/host/add-home" class="py-2 hover:opacity-80 transition duration-200">Add Home</a>
-        <% } else { %>
-          <!-- Guest Mobile Menu (default for logged-in users) -->
-          <a href="/homes" class="py-2 hover:opacity-80 transition duration-200">Homes</a>
-          <a href="/favourites" class="py-2 hover:opacity-80 transition duration-200">Favourites</a>
-          <a href="/bookings" class="py-2 hover:opacity-80 transition duration-200">Bookings</a>
-        <% } %>
-        <form action="/logout" method="POST" class="py-2">
-          <button type="submit" class="w-full text-left hover:opacity-80 transition duration-200">Logout</button>
-        </form>
-      <% } else { %>
-        <a href="/homes" class="py-2 hover:opacity-80 transition duration-200">Homes</a>
-        <a href="/login" class="py-2 hover:opacity-80 transition duration-200">Log in</a>
-        <a href="/signup" class="py-2 hover:opacity-80 transition duration-200">Sign up</a>
-      <% } %>
+          <% } else { %>
+            <!-- Guest Mobile Menu (default for logged-in users) -->
+            <a href="/homes" class="py-2 hover:opacity-80 transition duration-200">Homes</a>
+            <a href="/favourites" class="py-2 hover:opacity-80 transition duration-200">Favourites</a>
+            <a href="/bookings" class="py-2 hover:opacity-80 transition duration-200">Bookings</a>
+            <a href="/recently-viewed" class="py-2 hover:opacity-80 transition duration-200">Recently Viewed</a>
+            <a href="/past-bookings" class="py-2 hover:opacity-80 transition duration-200">Past Bookings</a>
+            <a href="/profile" class="py-2 hover:opacity-80 transition duration-200">Profile</a>
+            <% } %>
+              <form action="/logout" method="POST" class="py-2">
+                <button type="submit" class="w-full text-left hover:opacity-80 transition duration-200">Logout</button>
+              </form>
+              <% } else { %>
+                <a href="/homes" class="py-2 hover:opacity-80 transition duration-200">Homes</a>
+                <a href="/login" class="py-2 hover:opacity-80 transition duration-200">Log in</a>
+                <a href="/signup" class="py-2 hover:opacity-80 transition duration-200">Sign up</a>
+                <% } %>
     </div>
   </div>
 
   <script>
     // Simple mobile toggle (no dependency)
-    document.addEventListener('DOMContentLoaded', function(){
+    document.addEventListener('DOMContentLoaded', function () {
       var btn = document.getElementById('nav-toggle');
       var menu = document.getElementById('nav-mobile');
-      if (btn) btn.addEventListener('click', function(){
+      if (btn) btn.addEventListener('click', function () {
         if (menu.classList.contains('hidden')) menu.classList.remove('hidden'); else menu.classList.add('hidden');
       });
     });

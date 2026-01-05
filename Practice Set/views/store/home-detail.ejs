@@ -1,145 +1,275 @@
 <%- include('../partials/head') %>
-
-  <head>
-    <!-- Tailwind + FontAwesome -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   </head>
 
-  <body class="bg-gradient-to-br from-gray-100 to-gray-50 min-h-screen">
-
-    <!-- Navigation -->
+  <body class="bg-gray-100">
     <%- include('../partials/nav') %>
 
-    <main class="container mx-auto mt-10 mb-10 px-4">
-      <% if (home) { %>
-
-        <!-- Back Button -->
-        <div class="mb-6">
-          <a href="/homes" class="inline-flex items-center gap-2 text-red-500 hover:text-red-600 font-medium">
-            <i class="fas fa-arrow-left"></i> Back to Homes
-          </a>
-        </div>
-
-        <!-- Detail Card -->
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-
-          <!-- Image Section -->
-          <div class="relative overflow-hidden h-96 bg-gray-200">
-            <img
-              src="<%= (home.photo && home.photo.length) ? ('/uploads/' + home.photo[0]) : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
-              alt="<%= home.houseName %>" 
-              class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-            
-            <!-- Rating Badge -->
-            <div class="absolute top-4 right-4 bg-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2">
-              <i class="fas fa-star text-yellow-400 text-sm"></i>
-              <span class="font-semibold text-gray-800 text-sm"><%= home.rating || 'N/A' %></span>
-            </div>
+      <main class="container mx-auto mt-10 mb-10 px-4 max-w-7xl">
+        <% if (home) { %>
+          <!-- Back Button -->
+          <div class="mb-6">
+            <a href="/" class="inline-flex items-center gap-2 text-red-500 hover:text-red-600 font-medium">
+              <i class="fas fa-arrow-left"></i> Back to Homes
+            </a>
           </div>
 
-          <!-- Content Section -->
-          <div class="p-8">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column - Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+              <!-- Image Gallery -->
+              <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <% if (home.photo && home.photo.length> 0) { %>
+                  <div class="relative">
+                    <img id="mainImage" src="/uploads/<%= home.photo[0] %>" alt="<%= home.houseName %>"
+                      class="w-full h-96 object-cover">
+                    <% if (home.photo.length> 1) { %>
+                      <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                        <% home.photo.forEach((photo, index)=> { %>
+                          <button onclick="changeImage('<%= photo %>', '<%= index %>')"
+                            class="w-16 h-16 rounded-lg overflow-hidden border-2 border-white <%= index === 0 ? 'ring-2 ring-red-500' : '' %>">
+                            <img src="/uploads/<%= photo %>" alt="Thumbnail" class="w-full h-full object-cover">
+                          </button>
+                          <% }) %>
+                      </div>
+                      <% } %>
+                  </div>
+                  <% } else { %>
+                    <img
+                      src="https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg"
+                      alt="<%= home.houseName %>" class="w-full h-96 object-cover">
+                    <% } %>
+              </div>
 
-            <!-- Header -->
-            <div class="mb-8">
-              <h1 class="text-4xl font-extrabold text-gray-900 mb-3">
-                <%= home.houseName %>
-              </h1>
-              
-              <p class="text-lg text-gray-600 flex items-center gap-2">
-                <i class="fas fa-map-marker-alt text-red-500"></i>
-                <%= home.location %>
-              </p>
+              <!-- Header -->
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
+                  <%= home.houseName %>
+                </h1>
+                <p class="text-lg text-gray-600 flex items-center gap-2 mb-4">
+                  <i class="fas fa-map-marker-alt text-red-500"></i>
+                  <%= home.location %>
+                </p>
+
+                <div class="flex items-center gap-4 flex-wrap">
+                  <div class="flex items-center gap-1">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    
+                    <span class="font-semibold">
+                      <%= (typeof avgRating !=='undefined' && avgRating) ? avgRating.toFixed(1) : '0' %>
+                    </span>
+                    <span class="text-gray-500">
+                      (<%= typeof reviewCount !=='undefined' ? reviewCount : 0 %> reviews)
+                    </span>
+
+                  </div>
+                  <% if (home.propertyType) { %>
+                    <span class="px-3 py-1 bg-gray-100 rounded-full text-sm capitalize">
+                      <%= home.propertyType %>
+                    </span>
+                    <% } %>
+                      <% if (home.hostName) { %>
+                        <span class="text-gray-600"><i class="fas fa-user mr-1"></i>
+                          <%= home.hostName %>
+                        </span>
+                        <% } %>
+                </div>
+              </div>
+
+              <!-- Property Details -->
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">About this place</h2>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <% if (home.bedrooms) { %>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                      <i class="fas fa-bed text-2xl text-red-500 mb-2"></i>
+                      <p class="font-semibold">
+                        <%= home.bedrooms %> Bedroom<%= home.bedrooms> 1 ? 's' : '' %>
+                      </p>
+                    </div>
+                    <% } %>
+                      <% if (home.bathrooms) { %>
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                          <i class="fas fa-bath text-2xl text-blue-500 mb-2"></i>
+                          <p class="font-semibold">
+                            <%= home.bathrooms %> Bathroom<%= home.bathrooms> 1 ? 's' : '' %>
+                          </p>
+                        </div>
+                        <% } %>
+                          <% if (home.maxGuests) { %>
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                              <i class="fas fa-users text-2xl text-green-500 mb-2"></i>
+                              <p class="font-semibold">
+                                <%= home.maxGuests %> Guest<%= home.maxGuests> 1 ? 's' : '' %>
+                              </p>
+                            </div>
+                            <% } %>
+                              <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <i class="fas fa-rupee-sign text-2xl text-purple-500 mb-2"></i>
+                                <p class="font-semibold">₹<%= home.price %>/night</p>
+                              </div>
+                </div>
+
+                <% if (home.description) { %>
+                  <p class="text-gray-700 leading-relaxed">
+                    <%= home.description %>
+                  </p>
+                  <% } %>
+              </div>
+
+              <!-- Amenities -->
+              <% if (home.amenities && home.amenities.length> 0) { %>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                  <h2 class="text-2xl font-bold text-gray-900 mb-4">Amenities</h2>
+                  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <% const amenityIcons={ wifi: 'fa-wifi' , parking: 'fa-parking' , pool: 'fa-swimming-pool' ,
+                      ac: 'fa-snowflake' , heating: 'fa-fire' , kitchen: 'fa-utensils' , tv: 'fa-tv' ,
+                      washer: 'fa-tshirt' , dryer: 'fa-wind' , gym: 'fa-dumbbell' , balcony: 'fa-home' ,
+                      garden: 'fa-seedling' }; %>
+                      <% home.amenities.forEach(amenity=> { %>
+                        <div class="flex items-center gap-2">
+                          <i class="fas <%= amenityIcons[amenity] || 'fa-check' %> text-red-500"></i>
+                          <span class="capitalize">
+                            <%= amenity %>
+                          </span>
+                        </div>
+                        <% }) %>
+                  </div>
+                </div>
+                <% } %>
+
+                  <!-- Reviews -->
+                  <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-4">
+                      <h2 class="text-2xl font-bold text-gray-900">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>Reviews (<%= reviewCount %>)
+                      </h2>
+                      <% if (isLoggedIn) { %>
+                        <a href="/homes/<%= home._id %>/review"
+                          class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+                          <i class="fas fa-plus mr-1"></i>Add Review
+                        </a>
+                        <% } %>
+                    </div>
+
+                    <% if (reviews && reviews.length> 0) { %>
+                      <div class="space-y-6">
+                        <% reviews.forEach(review=> { %>
+                          <div class="border-b border-gray-200 pb-6 last:border-0">
+                            <div class="flex items-start justify-between mb-2">
+                              <div>
+                                <p class="font-semibold text-gray-900">
+                                  <%= review.userName %>
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                  <%= new Date(review.createdAt).toLocaleDateString() %>
+                                </p>
+                              </div>
+                              <div class="flex items-center gap-1">
+                                <% for (let i=0; i < 5; i++) { %>
+                                  <i
+                                    class="fas fa-star <%= i < review.rating ? 'text-yellow-400' : 'text-gray-300' %>"></i>
+                                  <% } %>
+                              </div>
+                            </div>
+                            <p class="text-gray-700">
+                              <%= review.comment %>
+                            </p>
+                          </div>
+                          <% }) %>
+                      </div>
+                      <% } else { %>
+                        <p class="text-gray-500 text-center py-8">No reviews yet. Be the first to review!</p>
+                        <% } %>
+                  </div>
+
+                  <!-- Related Homes -->
+                  <% if (relatedHomes && relatedHomes.length> 0) { %>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                      <h2 class="text-2xl font-bold text-gray-900 mb-4">Similar Homes</h2>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <% relatedHomes.forEach(relatedHome=> { %>
+                          <a href="/homes/<%= relatedHome._id %>"
+                            class="flex gap-4 p-4 border-2 border-gray-200 rounded-lg hover:border-red-500 transition">
+                            <img
+                              src="<%= (relatedHome.photo && relatedHome.photo.length) ? ('/uploads/' + relatedHome.photo[0]) : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
+                              alt="<%= relatedHome.houseName %>" class="w-24 h-24 object-cover rounded-lg">
+                            <div class="flex-1">
+                              <h3 class="font-semibold text-gray-900">
+                                <%= relatedHome.houseName %>
+                              </h3>
+                              <p class="text-sm text-gray-600">
+                                <%= relatedHome.location %>
+                              </p>
+                              <p class="text-red-600 font-bold">₹<%= relatedHome.price %>/night</p>
+                            </div>
+                          </a>
+                          <% }) %>
+                      </div>
+                    </div>
+                    <% } %>
             </div>
 
-            <!-- Price & Host -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 pb-8 border-b border-gray-200">
-              <div>
-                <p class="text-sm text-gray-500 mb-1">Price per night</p>
-                <p class="text-3xl font-extrabold text-red-600">
-                  ₹<%= home.price %>
-                </p>
-              </div>
+            <!-- Right Column - Booking Card -->
+            <div class="lg:col-span-1">
+              <div class="bg-white rounded-xl shadow-lg p-6 sticky top-4">
+                <div class="mb-6">
+                  <p class="text-3xl font-extrabold text-red-600">₹<%= home.price %>
+                  </p>
+                  <p class="text-gray-500">per night</p>
+                </div>
 
-              <div>
-                <p class="text-sm text-gray-500 mb-1">Host</p>
-                <p class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                  <i class="fas fa-user-circle text-gray-400"></i>
-                  <%= home.hostName || home.host || 'Unknown Host' %>
-                </p>
-              </div>
+                <a href="/homes/<%= home._id %>/book"
+                  class="w-full bg-red-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-red-600 transition text-center block mb-4">
+                  <i class="fas fa-calendar-check mr-2"></i>Book Now
+                </a>
 
-              <div>
-                <p class="text-sm text-gray-500 mb-1">Rating</p>
-                <div class="flex items-center gap-2">
-                  <div class="flex items-center">
-                    <% for (let i = 0; i < 5; i++) { %>
-                      <i class="fas fa-star <% if (i < Math.floor(home.rating || 0)) { %>text-yellow-400<% } else { %>text-gray-300<% } %>"></i>
-                    <% } %>
+                <div class="space-y-4 text-sm text-gray-600">
+                  <div class="flex justify-between">
+                    <span>Check-in</span>
+                    <span class="font-semibold">3:00 PM</span>
                   </div>
-                  <span class="text-gray-700 font-semibold">(<%= home.rating || '0' %>)</span>
+                  <div class="flex justify-between">
+                    <span>Check-out</span>
+                    <span class="font-semibold">11:00 AM</span>
+                  </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                  <%- include('../partials/favourite') %>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- Description (if available) -->
-            <% if (home.description) { %>
-              <div class="mb-8">
-                <h2 class="text-xl font-bold text-gray-900 mb-1 text-center">About this home</h2>
-                <p class="text-gray-600 leading-relaxed">
-                  <%= home.description %>
-                </p>
+          <% } else { %>
+            <div class="bg-white rounded-xl shadow-md p-12 text-center">
+              <div class="text-6xl text-gray-300 mb-4">
+                <i class="fas fa-home"></i>
               </div>
-            <% } %>
-
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-1">
-              <div class="flex-1">
-                <%- include('../partials/favourite') %>
-              </div>
+              <p class="text-gray-600 text-lg mb-6">Home details not found.</p>
+              <a href="/" class="inline-block px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium">
+                Back to Homes
+              </a>
             </div>
-          </div>
-        </div>
+            <% } %>
+      </main>
 
-        <!-- Additional Info -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          <!-- Amenities (if available) -->
-          <div class="bg-white rounded-xl shadow-md p-6">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">Amenities</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li class="flex items-center gap-2"><i class="fas fa-wifi text-red-500"></i> Free WiFi</li>
-              <li class="flex items-center gap-2"><i class="fas fa-tv text-red-500"></i> TV</li>
-              <li class="flex items-center gap-2"><i class="fas fa-snowflake text-red-500"></i> Air Conditioning</li>
-              <li class="flex items-center gap-2"><i class="fas fa-utensils text-red-500"></i> Kitchen</li>
-            </ul>
-          </div>
-
-          <!-- House Rules (if available) -->
-          <div class="bg-white rounded-xl shadow-md p-6">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">House Rules</h3>
-            <ul class="space-y-2 text-gray-600">
-              <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Check-in: 3 PM</li>
-              <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Check-out: 11 AM</li>
-              <li class="flex items-center gap-2"><i class="fas fa-ban text-red-500"></i> No smoking</li>
-              <li class="flex items-center gap-2"><i class="fas fa-ban text-red-500"></i> No pets</li>
-            </ul>
-          </div>
-        </div>
-
-      <% } else { %>
-        <!-- Not Found State -->
-        <div class="bg-white rounded-xl shadow-md p-12 text-center">
-          <div class="text-6xl text-gray-300 mb-4">
-            <i class="fas fa-home"></i>
-          </div>
-          <p class="text-gray-600 text-lg mb-6">Home details not found.</p>
-          <a href="/homes" class="inline-block px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium">
-            Back to Homes
-          </a>
-        </div>
-      <% } %>
-    </main>
+      <script>
+        function changeImage(photo, index) {
+          document.getElementById('mainImage').src = '/uploads/' + photo;
+          document.querySelectorAll('button').forEach((btn, i) => {
+            if (i === index) {
+              btn.classList.add('ring-2', 'ring-red-500');
+            } else {
+              btn.classList.remove('ring-2', 'ring-red-500');
+            }
+          });
+        }
+      </script>
 
   </body>
+
   </html>

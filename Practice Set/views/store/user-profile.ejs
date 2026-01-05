@@ -1,0 +1,63 @@
+<%- include('../partials/head') %>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body class="bg-gray-100">
+  <%- include('../partials/nav') %>
+
+  <main class="container mx-auto bg-white shadow-lg rounded-lg p-8 mt-10 max-w-4xl">
+    <h1 class="text-3xl font-bold text-red-500 mb-6 text-center">My Profile</h1>
+
+    <form action="/profile" method="POST" enctype="multipart/form-data" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- First Name -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">First Name</label>
+          <input type="text" name="firstName" value="<%= user.firstName %>" required
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none">
+        </div>
+
+        <!-- Last Name -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Last Name</label>
+          <input type="text" name="lastName" value="<%= user.lastName || '' %>"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none">
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+          <input type="email" name="email" value="<%= user.email %>" required
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none">
+        </div>
+
+        <!-- Phone Number -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+          <input type="tel" name="phoneNumber" value="<%= user.phoneNumber || '' %>"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none">
+        </div>
+
+        <!-- Bio -->
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Bio</label>
+          <textarea name="bio" rows="4" placeholder="Tell us about yourself..."
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none"><%= user.bio || '' %></textarea>
+        </div>
+      </div>
+
+      <div class="flex gap-4">
+        <button type="submit" class="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition">
+          <i class="fas fa-save mr-2"></i>Save Changes
+        </button>
+        <a href="/" class="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </main>
+
+</body>
+</html>
+

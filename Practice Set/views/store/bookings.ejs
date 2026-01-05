@@ -1,9 +1,84 @@
 <%- include('../partials/head') %>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
+<body class="bg-gray-100">
   <%- include('../partials/nav') %>
-  <main class="container mx-auto mt-20 text-center">
-    <h1 class="text-8xl font-bold text-red-500 mb-4">My Bookings</h1>
-    <p class="text-4xl text-gray-700 mb-8">Bookings will appear here</p>
+  
+  <main class="container mx-auto bg-white shadow-lg rounded-lg p-8 mt-10 max-w-6xl">
+    <h1 class="text-3xl font-bold text-red-500 mb-6 text-center">My Bookings</h1>
+
+    <% if (bookings && bookings.length > 0) { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% bookings.forEach(booking => { %>
+          <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition">
+            <!-- Home Image -->
+            <img
+              src="<%= (booking.homeId && booking.homeId.photo && booking.homeId.photo.length) ? ('/uploads/' + booking.homeId.photo[0]) : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
+              alt="<%= booking.homeId ? booking.homeId.houseName : 'Home' %>"
+              class="w-full h-48 object-cover"
+            >
+            
+            <!-- Booking Details -->
+            <div class="p-5">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">
+                <%= booking.homeId ? booking.homeId.houseName : 'Home' %>
+              </h3>
+              
+              <% if (booking.homeId) { %>
+                <p class="text-sm text-gray-600 mb-2 flex items-center">
+                  <i class="fas fa-map-marker-alt mr-2 text-red-500"></i>
+                  <%= booking.homeId.location %>
+                </p>
+              <% } %>
+
+              <div class="space-y-2 mb-4 text-sm">
+                <div class="flex items-center text-gray-700">
+                  <i class="fas fa-calendar-check mr-2 text-green-500"></i>
+                  <span><strong>Check-in:</strong> <%= new Date(booking.checkInDate).toLocaleDateString() %></span>
+                </div>
+                <div class="flex items-center text-gray-700">
+                  <i class="fas fa-calendar-times mr-2 text-red-500"></i>
+                  <span><strong>Check-out:</strong> <%= new Date(booking.checkOutDate).toLocaleDateString() %></span>
+                </div>
+                <div class="flex items-center text-gray-700">
+                  <i class="fas fa-calendar mr-2 text-blue-500"></i>
+                  <span><strong>Booked on:</strong> <%= new Date(booking._id.getTimestamp()).toLocaleDateString() %></span>
+                </div>
+              </div>
+
+              <div class="pt-4 border-t border-gray-200">
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-sm text-gray-600">Total Price:</span>
+                  <span class="text-xl font-bold text-red-600">₹<%= booking.totalPrice %></span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-xs px-2 py-1 rounded-full <%= booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : booking.status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800' %> font-medium">
+                    <%= booking.status.charAt(0).toUpperCase() + booking.status.slice(1) %>
+                  </span>
+                  <% if (booking.status === 'confirmed') { %>
+                    <form action="/bookings/<%= booking._id %>/cancel" method="POST" class="inline">
+                      <button type="submit" onclick="return confirm('Are you sure you want to cancel this booking?')" 
+                        class="text-xs px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">
+                        Cancel
+                      </button>
+                    </form>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="text-center py-12">
+        <i class="fas fa-calendar-times text-6xl text-gray-300 mb-4"></i>
+        <p class="text-xl text-gray-500 mb-2">No bookings yet</p>
+        <p class="text-gray-400 mb-6">Start exploring and book your first home!</p>
+        <a href="/" class="inline-block bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition">
+          Browse Homes
+        </a>
+      </div>
+    <% } %>
   </main>
 </body>
