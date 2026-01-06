@@ -1,6 +1,8 @@
 // ================= CORE MODULES =================
 const path = require("path");
 const fs = require("fs");
+require("dotenv").config();
+
 
 // ================= EXTERNAL MODULES =================
 const express = require("express");
@@ -176,7 +178,7 @@ app1.get("/", (req, res) => {
 app1.use(errorController.pageNotFound);
 
 // ================= SERVER =================
-const PORT = 3012;
+const PORT = process.env.PORT || 3012;
 
 mongoose
   .connect(DB_PATH)
