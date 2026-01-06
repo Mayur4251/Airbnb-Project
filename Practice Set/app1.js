@@ -3,14 +3,13 @@ const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
 
-
 // ================= EXTERNAL MODULES =================
 const express = require("express");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const multer = require("multer");
 const mongoose = require("mongoose");
-const flash = require("connect-flash");  // ← Moved here with other requires
+const flash = require("connect-flash");
 
 // ================= LOCAL MODULES =================
 const storeRouter = require("./routes/storeRouter");
@@ -20,15 +19,12 @@ const rootDir = require("./utils/pathUtil");
 const errorController = require("./controllers/error");
 const reviewRoutes = require("./routes/reviewRouter");
 
-
 // ================= APP INIT =================
 const app1 = express();
 
-// ================= DB =================
-const DB_PATH =
-  "mongodb+srv://kmayur23it_db_user:Mayur4251@cluster1.rchz191.mongodb.net/airbnb?appName=Cluster1";
-
-mongoose.connect(process.env.DB_PATH)
+// ================= ENV =================
+const MONGO_URI = process.env.MONGO_URI;
+const PORT = process.env.PORT || 3012;
 
 // ================= VIEW ENGINE =================
 app1.set("view engine", "ejs");
@@ -36,7 +32,7 @@ app1.set("views", path.join(__dirname, "views"));
 
 // ================= SESSION STORE =================
 const store = new MongoDBStore({
-  uri: DB_PATH,
+  uri: MONGO_URI,
   collection: "sessions",
 });
 
@@ -102,14 +98,13 @@ app1.use(
   })
 );
 
-// ================= FLASH MIDDLEWARE - MUST BE AFTER SESSION =================
+// ================= FLASH =================
 app1.use(flash());
 
-// Make flash messages available in all templates
 app1.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success');
-  res.locals.error_msg = req.flash('error');
-  res.locals.info_msg = req.flash('info');
+  res.locals.success_msg = req.flash("success");
+  res.locals.error_msg = req.flash("error");
+  res.locals.info_msg = req.flash("info");
   next();
 });
 
@@ -126,28 +121,23 @@ app1.use((req, res, next) => {
 app1.use(authRouter);
 app1.use(reviewRoutes);
 
-// ================= AUTH GUARD (FIXED - REVIEW WORKS) =================
+// ================= AUTH GUARD =================
 app1.use((req, res, next) => {
-
-  const publicPaths = [
-    '/signup',
-    '/login',
-    '/logout'
-  ];
+  const publicPaths = ["/signup", "/login", "/logout"];
 
   const allowedRoutes = [
-    /^\/$/,                             // Home
-    /^\/homes$/,                        // Home list
-    /^\/homes\/[^/]+$/,                 // Home detail
-    /^\/homes\/[^/]+\/book$/,           // Book home
-    /^\/homes\/[^/]+\/review$/,         // ⭐ REVIEW (GET + POST)  ← FIX
-    /^\/uploads/,                       // Images
-    /^\/public/                         // Static files
+    /^\/$/,
+    /^\/homes$/,
+    /^\/homes\/[^/]+$/,
+    /^\/homes\/[^/]+\/book$/,
+    /^\/homes\/[^/]+\/review$/,
+    /^\/uploads/,
+    /^\/public/,
   ];
 
   const isAllowed =
     publicPaths.includes(req.path) ||
-    allowedRoutes.some(route => route.test(req.path));
+    allowedRoutes.some((route) => route.test(req.path));
 
   if (!req.isLoggedIn && !isAllowed) {
     return res.redirect("/login");
@@ -159,7 +149,7 @@ app1.use((req, res, next) => {
 // ================= STORE ROUTES =================
 app1.use(storeRouter);
 
-// ================= HOST ROUTES (PROTECTED) =================
+// ================= HOST ROUTES =================
 app1.use("/host", (req, res, next) => {
   if (!req.isLoggedIn) {
     return res.redirect("/login");
@@ -179,15 +169,14 @@ app1.get("/", (req, res) => {
 // ================= 404 =================
 app1.use(errorController.pageNotFound);
 
-// ================= SERVER =================
-const PORT = process.env.PORT || 3012;
-
+// ================= START SERVER =================
 mongoose
-  .connect(DB_PATH)
+  .connect(MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB");
+
     app1.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}`);
+      console.log("Server running on port " + PORT);
     });
   })
   .catch((err) => {
