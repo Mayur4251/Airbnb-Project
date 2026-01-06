@@ -28,6 +28,8 @@ const app1 = express();
 const DB_PATH =
   "mongodb+srv://kmayur23it_db_user:Mayur4251@cluster1.rchz191.mongodb.net/airbnb?appName=Cluster1";
 
+mongoose.connect(process.env.DB_PATH)
+
 // ================= VIEW ENGINE =================
 app1.set("view engine", "ejs");
 app1.set("views", path.join(__dirname, "views"));
