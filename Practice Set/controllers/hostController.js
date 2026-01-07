@@ -86,7 +86,7 @@ exports.postAddHome = async (req, res, next) => {
     }
 
     // Save only filenames (not full paths) to keep DB OS-agnostic
-    const photos = req.files.map(f => f.filename);
+    const photos = req.files.map(f => f.path);   // Cloudinary URL
     
     // Parse amenities array
     const amenitiesArray = Array.isArray(amenities) ? amenities : (amenities ? [amenities] : []);

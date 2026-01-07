@@ -1,5 +1,6 @@
 const express = require('express');
 const hostRouter = express.Router();
+const upload = require("../utils/multer");
 
 const hostController = require("../controllers/hostController")
 
@@ -7,7 +8,7 @@ const hostController = require("../controllers/hostController")
 hostRouter.get('/add-home', hostController.getAddHome);
 
 // POST: Handle form submission
-hostRouter.post('/add-home', hostController.postAddHome);
+hostRouter.post("/add-home", upload.array("photo", 5), hostController.postAddHome);
 
 hostRouter.get('/host-home-list', hostController.getHostHomes);
 

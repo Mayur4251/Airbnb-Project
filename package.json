@@ -20,6 +20,7 @@
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "body-parser": "^1.20.3",
+    "cloudinary": "^1.41.3",
     "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^5.0.0",
     "dotenv": "^17.2.3",
@@ -30,6 +31,7 @@
     "mongodb": "^7.0.0",
     "mongoose": "^9.0.2",
     "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
     "mysql2": "^3.15.3"
   },
   "description": ""
