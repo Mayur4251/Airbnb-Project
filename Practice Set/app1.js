@@ -2,6 +2,8 @@
 const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
+console.log("Mongo URI:", process.env.MONGO_URI);
+
 
 // ================= EXTERNAL MODULES =================
 const express = require("express");
@@ -81,8 +83,8 @@ app1.use(multer({ storage, fileFilter }).array("photos", 5));
 app1.use(express.urlencoded({ extended: true }));
 app1.use(express.json());
 
-app1.use(express.static(path.join(rootDir, "public")));
-app1.use("/uploads", express.static(path.join(rootDir, "uploads")));
+app1.use(express.static(path.join(__dirname, "public")));
+app1.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ================= SESSION =================
 app1.use(

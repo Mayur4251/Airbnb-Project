@@ -124,7 +124,6 @@ exports.postAddHome = async (req, res, next) => {
         }
       });
     }
-    
     next(err);
   }
 };
@@ -217,7 +216,6 @@ exports.postEditHome = async (req, res, next) => {
         }
       });
     }
-    
     next(err);
   }
 };
