@@ -1,21 +1,36 @@
-const express = require('express');
-const hostRouter = express.Router();
+const express = require("express");
+const hostController = require("../controllers/hostController");
 const upload = require("../utils/multer");
 
-const hostController = require("../controllers/hostController")
+const hostRouter = express.Router();
 
-// GET: Show form
-hostRouter.get('/add-home', hostController.getAddHome);
+/* ---------------- GET: Show add home form ---------------- */
+hostRouter.get("/add-home", hostController.getAddHome);
 
-// POST: Handle form submission
-hostRouter.post("/add-home", upload.array("photo", 5), hostController.postAddHome);
+/* ---------------- POST: Add new home ---------------- */
+hostRouter.post(
+  "/add-home",
+  upload.array("photos", 5),
+  hostController.postAddHome
+);
 
-hostRouter.get('/host-home-list', hostController.getHostHomes);
+/* ---------------- GET: Host homes list ---------------- */
+hostRouter.get("/host-home-list", hostController.getHostHomes);
 
-hostRouter.get('/edit-home/:homeId', hostController.getEditHome);
+/* ---------------- GET: Edit home form ---------------- */
+hostRouter.get("/edit-home/:homeId", hostController.getEditHome);
 
-hostRouter.post('/edit-home', hostController.postEditHome);
+/* ---------------- POST: Update home ---------------- */
+hostRouter.post(
+  "/edit-home",
+  upload.array("photos", 5),
+  hostController.postEditHome
+);
 
-hostRouter.post('/delete-home/:homeId', hostController.postDeleteHome);
-// Export router and shared array
-exports.hostRouter = hostRouter;
+/* ---------------- POST: Delete home ---------------- */
+hostRouter.post(
+  "/delete-home/:homeId",
+  hostController.postDeleteHome
+);
+
+module.exports = hostRouter;

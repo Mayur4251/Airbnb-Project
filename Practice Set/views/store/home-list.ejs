@@ -1,23 +1,18 @@
 <%- include('../partials/head') %>
 
-<!-- Tailwind CSS & Font Awesome -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 </head>
-<body class="bg-gray-100">
 
-  <!-- Navigation -->
+<body class="bg-gray-100">
   <%- include('../partials/nav') %>
 
-  <!-- Main Content -->
   <main class="container mx-auto bg-white shadow-lg rounded-lg p-8 mt-10 max-w-6xl">
 
     <h2 class="text-3xl font-extrabold text-gray-800 mb-2 text-center">
       Here are our registered homes:
     </h2>
 
-    <!-- Add Home Button -->
     <div class="text-center mb-10">
       <a href="/host/add-home"
          class="bg-red-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-red-600 transition duration-300 inline-block shadow-md">
@@ -25,7 +20,6 @@
       </a>
     </div>
 
-    <!-- Homes Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 
       <% if (registeredHomes && registeredHomes.length > 0) { %>
@@ -36,32 +30,32 @@
             <!-- Home Image -->
             <a href="/homes/<%= home._id %>" class="block relative">
               <img
-                src="<%= (home.photo && home.photo.length) ? ('/uploads/' + home.photo[0]) : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
+                src="<%= (home.photo && home.photo.length) ? home.photo[0] : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
                 alt="<%= home.houseName %>"
                 class="w-full h-52 sm:h-48 object-cover transition-transform duration-300 group-hover:scale-105"
               >
 
-              <!-- overlay with rating on hover -->
               <div class="absolute right-3 bottom-3 bg-white bg-opacity-90 rounded-full px-3 py-1 flex items-center gap-2 shadow">
                 <i class="fas fa-star text-yellow-400"></i>
                 <span class="text-sm font-semibold text-gray-800"><%= home.rating || '—' %></span>
               </div>
             </a>
 
-            <!-- Card Content -->
             <div class="p-5">
               <h3 class="text-lg font-bold text-gray-900 mb-1 truncate"><%= home.houseName %></h3>
-
-              <p class="text-sm text-gray-600 mb-3 flex items-center"><i class="fas fa-map-marker-alt mr-2 text-red-500"></i><%= home.location %></p>
+              <p class="text-sm text-gray-600 mb-3 flex items-center">
+                <i class="fas fa-map-marker-alt mr-2 text-red-500"></i><%= home.location %>
+              </p>
 
               <div class="mb-4">
                 <span class="text-2xl font-extrabold text-red-600">₹<%= home.price %></span>
                 <span class="text-sm text-gray-500"> / night</span>
               </div>
 
-              <!-- Action Buttons -->
               <div class="flex flex-col gap-2">
-                <a href="/homes/<%= home._id %>" class="w-full py-2 px-4 rounded-md bg-red-500 text-white text-center font-medium hover:bg-red-600 transition">View Details</a>
+                <a href="/homes/<%= home._id %>" class="w-full py-2 px-4 rounded-md bg-red-500 text-white text-center font-medium hover:bg-red-600 transition">
+                  View Details
+                </a>
 
                 <form action="/favourites" method="POST" class="w-full">
                   <input type="hidden" name="id" value="<%= home._id %>">
@@ -71,7 +65,6 @@
                 </form>
               </div>
 
-              <!-- host and tags -->
               <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
                 <div class="flex items-center gap-2">
                   <i class="fas fa-user"></i>
@@ -91,7 +84,6 @@
         <% }) %>
       <% } else { %>
 
-        <!-- No Homes -->
         <div class="col-span-full">
           <p class="text-gray-500 text-center text-lg py-12 border-2 border-dashed border-gray-300 rounded-lg">
             No homes registered yet. Click “+ Add New Home” above to get started!

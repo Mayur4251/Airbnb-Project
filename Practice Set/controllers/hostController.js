@@ -1,6 +1,5 @@
 const Home = require("../models/home");
-const fs = require("fs");
-const path = require("path");
+const cloudinary = require("../utils/cloudinary");
 
 /* ---------------- GET ADD HOME FORM ---------------- */
 exports.getAddHome = (req, res, next) => {
@@ -17,23 +16,23 @@ exports.getEditHome = async (req, res, next) => {
   try {
     const homeId = req.params.homeId;
     const home = await Home.findById(homeId);
-    
-    if (!home) {
-      return res.redirect("/host/host-home-list");
-    }
-    
-    // ADDED: Check if the logged-in user is the host of this home
-    if (req.session.user && home.hostId.toString() !== req.session.user._id.toString()) {
-      return res.status(403).render("error", { 
+
+    if (!home) return res.redirect("/host/host-home-list");
+
+    if (
+      req.session.user &&
+      home.hostId.toString() !== req.session.user._id.toString()
+    ) {
+      return res.status(403).render("error", {
         message: "You are not authorized to edit this home",
-        isLoggedIn: req.isLoggedIn 
+        isLoggedIn: req.isLoggedIn,
       });
     }
-    
+
     res.render("host/edit-home", {
       pageTitle: "Edit Your Home",
       editing: true,
-      home: home,
+      home,
       isLoggedIn: req.isLoggedIn,
     });
   } catch (err) {
@@ -45,12 +44,11 @@ exports.getEditHome = async (req, res, next) => {
 /* ---------------- GET HOST'S HOMES LIST ---------------- */
 exports.getHostHomes = async (req, res, next) => {
   try {
-    // FIXED: Filter homes by logged-in host instead of showing all homes
     const hostId = req.session.user._id;
-    const registeredHomes = await Home.find({ hostId: hostId });
-    
+    const registeredHomes = await Home.find({ hostId });
+
     res.render("host/host-home-list", {
-      registeredHomes: registeredHomes,
+      registeredHomes,
       pageTitle: "Host Home List",
       isLoggedIn: req.isLoggedIn,
     });
@@ -63,33 +61,44 @@ exports.getHostHomes = async (req, res, next) => {
 /* ---------------- POST ADD HOME ---------------- */
 exports.postAddHome = async (req, res, next) => {
   try {
-    // ADDED: Check if user is logged in
     if (!req.session.isLoggedIn || !req.session.user) {
       return res.redirect("/login");
     }
 
-    const { houseName, location, price, description, propertyType, bedrooms, bathrooms, maxGuests, amenities } = req.body;
-    
-    // ADDED: Input validation
+    const {
+      houseName,
+      location,
+      price,
+      description,
+      propertyType,
+      bedrooms,
+      bathrooms,
+      maxGuests,
+      amenities,
+    } = req.body;
+
     if (!houseName || !location || !price) {
       return res.status(422).render("error", {
         message: "House name, location, and price are required",
-        isLoggedIn: req.isLoggedIn
-      });
-    }
-    
-    if (!req.files || req.files.length === 0) {
-      return res.status(422).render("error", {
-        message: "At least one image is required",
-        isLoggedIn: req.isLoggedIn
+        isLoggedIn: req.isLoggedIn,
       });
     }
 
-    // Save only filenames (not full paths) to keep DB OS-agnostic
-    const photos = req.files.map(f => f.path);   // Cloudinary URL
-    
-    // Parse amenities array
-    const amenitiesArray = Array.isArray(amenities) ? amenities : (amenities ? [amenities] : []);
+    if (!req.files || req.files.length === 0) {
+      return res.status(422).render("error", {
+        message: "At least one image is required",
+        isLoggedIn: req.isLoggedIn,
+      });
+    }
+
+    // ✅ Cloudinary URLs
+    const photos = req.files.map((f) => f.path);
+
+    const amenitiesArray = Array.isArray(amenities)
+      ? amenities
+      : amenities
+      ? [amenities]
+      : [];
 
     const newHome = new Home({
       houseName,
@@ -97,33 +106,21 @@ exports.postAddHome = async (req, res, next) => {
       price: parseFloat(price),
       rating: 0,
       photo: photos,
-      description: description || '',
-      propertyType: propertyType || 'house',
+      description: description || "",
+      propertyType: propertyType || "house",
       bedrooms: parseInt(bedrooms) || 1,
       bathrooms: parseInt(bathrooms) || 1,
       maxGuests: parseInt(maxGuests) || 2,
       amenities: amenitiesArray,
       hostId: req.session.user._id,
-      hostName: `${req.session.user.firstName} ${req.session.user.lastName}`
+      hostName: `${req.session.user.firstName} ${req.session.user.lastName}`,
     });
-    
+
     await newHome.save();
-    console.log('Home Saved Successfully');
+    console.log("Home Saved Successfully");
     res.redirect("/host/host-home-list");
   } catch (err) {
     console.error("Error adding home:", err);
-    
-    // ADDED: Clean up uploaded files if database save fails
-    if (req.files && req.files.length > 0) {
-      req.files.forEach(file => {
-        const filePath = path.join(__dirname, '../uploads', file.filename);
-        if (fs.existsSync(filePath)) {
-          fs.unlink(filePath, (unlinkErr) => {
-            if (unlinkErr) console.error("Error deleting file after failed save:", unlinkErr);
-          });
-        }
-      });
-    }
     next(err);
   }
 };
@@ -131,31 +128,30 @@ exports.postAddHome = async (req, res, next) => {
 /* ---------------- POST EDIT HOME ---------------- */
 exports.postEditHome = async (req, res, next) => {
   try {
-    // ADDED: Check if user is logged in
     if (!req.session.isLoggedIn || !req.session.user) {
       return res.redirect("/login");
     }
 
-    const { id, houseName, location, price, description, propertyType, bedrooms, bathrooms, maxGuests, amenities } = req.body;
+    const {
+      id,
+      houseName,
+      location,
+      price,
+      description,
+      propertyType,
+      bedrooms,
+      bathrooms,
+      maxGuests,
+      amenities,
+    } = req.body;
 
     const home = await Home.findById(id);
-    if (!home) {
-      return res.redirect("/host/host-home-list");
-    }
+    if (!home) return res.redirect("/host/host-home-list");
 
-    // ADDED: Authorization check - ensure the logged-in user is the host
     if (home.hostId.toString() !== req.session.user._id.toString()) {
-      return res.status(403).render("error", { 
+      return res.status(403).render("error", {
         message: "You are not authorized to edit this home",
-        isLoggedIn: req.isLoggedIn 
-      });
-    }
-
-    // ADDED: Input validation
-    if (!houseName || !location || !price) {
-      return res.status(422).render("error", {
-        message: "House name, location, and price are required",
-        isLoggedIn: req.isLoggedIn
+        isLoggedIn: req.isLoggedIn,
       });
     }
 
@@ -167,55 +163,33 @@ exports.postEditHome = async (req, res, next) => {
     home.bedrooms = parseInt(bedrooms) || home.bedrooms;
     home.bathrooms = parseInt(bathrooms) || home.bathrooms;
     home.maxGuests = parseInt(maxGuests) || home.maxGuests;
-    
-    // Parse amenities array
+
     if (amenities) {
       home.amenities = Array.isArray(amenities) ? amenities : [amenities];
     }
 
-    // If new files were uploaded, replace photo array with new filenames
+    // ✅ If new images uploaded → replace & delete old from Cloudinary
     if (req.files && req.files.length > 0) {
-      // Store old photos for deletion
-      const oldPhotos = [...home.photo];
-      
-      // Update with new photos
-      home.photo = req.files.map(f => f.filename);
-      
-      // Save first, then delete old photos
+      const oldPhotos = [...home.photo]; // old Cloudinary URLs
+      home.photo = req.files.map((f) => f.path);
+
       await home.save();
-      
-      // Delete old photos after successful save
-      oldPhotos.forEach(photo => {
-        // FIXED: Use proper path resolution
-        const photoPath = path.join(__dirname, '../uploads', photo);
-        if (fs.existsSync(photoPath)) {
-          fs.unlink(photoPath, (err) => {
-            if (err) console.error("Error while deleting old photo:", err);
-          });
-        }
-      });
-      
-      console.log('Home updated with new photos');
+
+      // delete old images from Cloudinary
+      for (let imgUrl of oldPhotos) {
+        const publicId = imgUrl.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(`elite-dwell/${publicId}`);
+      }
+
+      console.log("Home updated with new photos");
     } else {
       await home.save();
-      console.log('Home updated');
+      console.log("Home updated");
     }
 
     res.redirect("/host/host-home-list");
   } catch (err) {
-    console.error('Error while updating home:', err);
-    
-    // ADDED: Clean up newly uploaded files if update fails
-    if (req.files && req.files.length > 0) {
-      req.files.forEach(file => {
-        const filePath = path.join(__dirname, '../uploads', file.filename);
-        if (fs.existsSync(filePath)) {
-          fs.unlink(filePath, (unlinkErr) => {
-            if (unlinkErr) console.error("Error deleting file after failed update:", unlinkErr);
-          });
-        }
-      });
-    }
+    console.error("Error while updating home:", err);
     next(err);
   }
 };
@@ -223,49 +197,35 @@ exports.postEditHome = async (req, res, next) => {
 /* ---------------- POST DELETE HOME ---------------- */
 exports.postDeleteHome = async (req, res, next) => {
   try {
-    // ADDED: Check if user is logged in
     if (!req.session.isLoggedIn || !req.session.user) {
       return res.redirect("/login");
     }
 
     const homeId = req.params.homeId;
-    console.log('Attempting to delete home:', homeId);
-    
     const home = await Home.findById(homeId);
-    
-    if (!home) {
-      console.log('Home not found');
-      return res.redirect("/host/host-home-list");
-    }
+    if (!home) return res.redirect("/host/host-home-list");
 
-    // ADDED: Authorization check - ensure the logged-in user is the host
     if (home.hostId.toString() !== req.session.user._id.toString()) {
-      return res.status(403).render("error", { 
+      return res.status(403).render("error", {
         message: "You are not authorized to delete this home",
-        isLoggedIn: req.isLoggedIn 
+        isLoggedIn: req.isLoggedIn,
       });
     }
 
-    // ADDED: Delete associated photos before deleting the home
+    // ✅ Delete images from Cloudinary
     if (home.photo && home.photo.length > 0) {
-      home.photo.forEach(photo => {
-        const photoPath = path.join(__dirname, '../uploads', photo);
-        if (fs.existsSync(photoPath)) {
-          fs.unlink(photoPath, (err) => {
-            if (err) console.error("Error while deleting photo:", err);
-            else console.log("Photo deleted:", photo);
-          });
-        }
-      });
+      for (let imgUrl of home.photo) {
+        const publicId = imgUrl.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(`elite-dwell/${publicId}`);
+      }
     }
 
-    // Delete the home from database
     await Home.findByIdAndDelete(homeId);
-    console.log('Home deleted successfully');
-    
+    console.log("Home deleted successfully");
+
     res.redirect("/host/host-home-list");
   } catch (err) {
-    console.error('Error while deleting home:', err);
+    console.error("Error while deleting home:", err);
     next(err);
   }
 };

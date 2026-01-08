@@ -1,8 +1,10 @@
 // ================= CORE MODULES =================
 const path = require("path");
+require("dotenv").config({
+  path: path.join(__dirname, ".env")
+});
+
 const fs = require("fs");
-require("dotenv").config();
-console.log("Mongo URI:", process.env.MONGO_URI);
 
 
 // ================= EXTERNAL MODULES =================
@@ -12,10 +14,12 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 const multer = require("multer");
 const mongoose = require("mongoose");
 const flash = require("connect-flash");
+const upload = require("./utils/multer");
+
 
 // ================= LOCAL MODULES =================
 const storeRouter = require("./routes/storeRouter");
-const { hostRouter, registeredHomes } = require("./routes/hostRouter");
+const hostRouter = require("./routes/hostRouter");
 const authRouter = require("./routes/authRouter");
 const rootDir = require("./utils/pathUtil");
 const errorController = require("./controllers/error");
@@ -77,7 +81,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-app1.use(multer({ storage, fileFilter }).array("photos", 5));
+app1.use(upload.array("photos", 5));
 
 // ================= GLOBAL MIDDLEWARE =================
 app1.use(express.urlencoded({ extended: true }));
@@ -158,6 +162,7 @@ app1.use("/host", (req, res, next) => {
   }
   next();
 });
+
 app1.use("/host", hostRouter);
 
 // ================= HOME PAGE =================
@@ -176,6 +181,7 @@ mongoose
   .connect(MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB");
+    console.log("Mongo URI:", process.env.MONGO_URI); // debug
 
     app1.listen(PORT, () => {
       console.log("Server running on port " + PORT);
