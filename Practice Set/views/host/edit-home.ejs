@@ -1,202 +1,171 @@
 <%- include('../partials/head') %>
 
-  <!-- ✅ Add Tailwind CDN and Font Awesome -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-  </head>
+</head>
 
-  <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex flex-col">
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex flex-col">
 
-    <!-- ✅ Include Navigation -->
-    <%- include('../partials/nav') %>
+  <%- include('../partials/nav') %>
 
-    <!-- ✅ Main Content -->
-    <main class="flex-grow py-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl mx-auto">
-        <!-- Header Section -->
-        <div class="text-center mb-12">
-          <div class="inline-block p-4 bg-red-100 rounded-full mb-4">
-            <i class="fas fa-home text-red-500 text-3xl"></i>
-          </div>
-          <h1 class="text-4xl font-bold text-gray-900 mb-2">
-            <%= editing ? "Edit Your Listing" : "List Your Home" %>
-          </h1>
-          <p class="text-lg text-gray-600">
-            <%= editing ? "Update your home details to attract more guests" : "Share your home and start earning with EliteDwell" %>
-          </p>
+  <main class="flex-grow py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <div class="inline-block p-4 bg-red-100 rounded-full mb-4">
+          <i class="fas fa-home text-red-500 text-3xl"></i>
+        </div>
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">
+          <%= editing ? "Edit Your Listing" : "List Your Home" %>
+        </h1>
+        <p class="text-lg text-gray-600">
+          <%= editing ? "Update your home details to attract more guests" : "Share your home and start earning with EliteDwell" %>
+        </p>
+      </div>
+
+      <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-red-500 to-red-400 px-8 py-6">
+          <h2 class="text-2xl font-semibold text-white flex items-center gap-2">
+            <i class="fas <%= editing ? 'fa-edit' : 'fa-plus-circle' %>"></i>
+            <%= editing ? "Update Home Details" : "Home Information" %>
+          </h2>
         </div>
 
-        <!-- Form Card -->
-        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-red-500 to-red-400 px-8 py-6">
-            <h2 class="text-2xl font-semibold text-white flex items-center gap-2">
-              <i class="fas <%= editing ? 'fa-edit' : 'fa-plus-circle' %>"></i>
-              <%= editing ? "Update Home Details" : "Home Information" %>
-            </h2>
+        <form action="/host/<%= editing ? 'edit-home' : 'add-home' %>" 
+              method="POST" 
+              class="p-8 sm:p-10" 
+              enctype="multipart/form-data">
+
+          <input type="hidden" name="id" value="<%= editing ? home._id : '' %>">
+
+          <!-- House Name & Location -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-door-open text-red-500 mr-2"></i>House Name
+              </label>
+              <input type="text" name="houseName"
+                value="<%= editing ? home.houseName : ''%>" required
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 outline-none" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Location
+              </label>
+              <input type="text" name="location"
+                value="<%= editing ? home.location : ''%>" required
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 outline-none" />
+            </div>
           </div>
 
-          <form action="/host/<%= editing ? 'edit-home' : 'add-home' %>" method="POST" class="p-8 sm:p-10" enctype="multipart/form-data">
-
-            <input type="hidden" name="id" value="<%= editing ? home._id : '' %>">
-
-            <!-- Row 1: House Name & Location -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-              <!-- House Name -->
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  <i class="fas fa-door-open text-red-500 mr-2"></i>House Name
-                </label>
-                <input type="text" name="houseName" value="<%= editing ? home.houseName : ''%>"
-                  placeholder="Enter the House Name" required
-                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
-              </div>
-
-              <!-- Location -->
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Location
-                </label>
-                <input type="text" name="location" value="<%= editing ? home.location : ''%>"
-                  placeholder="Enter the Location" required
-                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
-              </div>
-            </div>
-
-            <!-- Row 2: Price & Property Type -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-              <!-- Price -->
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  <i class="fas fa-rupee-sign text-green-500 mr-2"></i>Price per Night
-                </label>
-                <input type="number" name="price" value="<%= editing ? home.price : ''%>" 
-                  placeholder="Enter the Price" min="1" step="0.01" required
-                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
-              </div>
-
-              <!-- Property Type -->
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  <i class="fas fa-building text-blue-500 mr-2"></i>Property Type
-                </label>
-                <select name="propertyType" required
-                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200">
-                  <option value="house" <%= editing && home.propertyType === 'house' ? 'selected' : '' %>>House</option>
-                  <option value="apartment" <%= editing && home.propertyType === 'apartment' ? 'selected' : '' %>>Apartment</option>
-                  <option value="villa" <%= editing && home.propertyType === 'villa' ? 'selected' : '' %>>Villa</option>
-                  <option value="studio" <%= editing && home.propertyType === 'studio' ? 'selected' : '' %>>Studio</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- Row 3: Bedrooms, Bathrooms, Max Guests -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
-              <!-- Bedrooms -->
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  <i class="fas fa-bed text-purple-500 mr-2"></i>Bedrooms
-                </label>
-                <input type="number" name="bedrooms" value="<%= editing ? (home.bedrooms || 1) : '1'%>" 
-                  placeholder="Bedrooms" min="1" required
-                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
-              </div>
-
-              <!-- Bathrooms -->
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  <i class="fas fa-bath text-blue-500 mr-2"></i>Bathrooms
-                </label>
-                <input type="number" name="bathrooms" value="<%= editing ? (home.bathrooms || 1) : '1'%>" 
-                  placeholder="Bathrooms" min="1" step="0.5" required
-                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
-              </div>
-
-              <!-- Max Guests -->
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  <i class="fas fa-users text-orange-500 mr-2"></i>Max Guests
-                </label>
-                <input type="number" name="maxGuests" value="<%= editing ? (home.maxGuests || 2) : '2'%>" 
-                  placeholder="Max Guests" min="1" required
-                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
-              </div>
-            </div>
-
-            <!-- Amenities -->
-            <div class="mb-6">
-              <label class="block text-sm font-semibold text-gray-700 mb-3">
-                <i class="fas fa-check-circle text-green-500 mr-2"></i>Amenities
+          <!-- Price & Type -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-rupee-sign text-green-500 mr-2"></i>Price
               </label>
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                <% const amenitiesList = ['wifi', 'parking', 'pool', 'ac', 'heating', 'kitchen', 'tv', 'washer', 'dryer', 'gym', 'balcony', 'garden']; %>
-                <% amenitiesList.forEach(amenity => { %>
-                  <label class="flex items-center cursor-pointer p-2 border-2 border-gray-200 rounded-lg hover:border-red-300 transition">
-                    <input type="checkbox" name="amenities" value="<%= amenity %>" 
-                      <%= editing && home.amenities && home.amenities.includes(amenity) ? 'checked' : '' %>
-                      class="mr-2 accent-red-500">
-                    <span class="text-sm text-gray-700 capitalize"><%= amenity %></span>
-                  </label>
+              <input type="number" name="price"
+                value="<%= editing ? home.price : ''%>" required
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 outline-none" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-building text-blue-500 mr-2"></i>Property Type
+              </label>
+              <select name="propertyType" required
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 outline-none">
+                <option value="house" <%= editing && home.propertyType === 'house' ? 'selected' : '' %>>House</option>
+                <option value="apartment" <%= editing && home.propertyType === 'apartment' ? 'selected' : '' %>>Apartment</option>
+                <option value="villa" <%= editing && home.propertyType === 'villa' ? 'selected' : '' %>>Villa</option>
+                <option value="studio" <%= editing && home.propertyType === 'studio' ? 'selected' : '' %>>Studio</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Bedrooms / Bathrooms / Guests -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+            <input type="number" name="bedrooms" value="<%= editing ? home.bedrooms : 1 %>" min="1"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg" />
+            <input type="number" name="bathrooms" value="<%= editing ? home.bathrooms : 1 %>" min="1"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg" />
+            <input type="number" name="maxGuests" value="<%= editing ? home.maxGuests : 2 %>" min="1"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg" />
+          </div>
+
+          <!-- Amenities -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Amenities</label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              <% const amenitiesList = ['wifi','parking','pool','ac','kitchen','tv']; %>
+              <% amenitiesList.forEach(amenity => { %>
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" name="amenities" value="<%= amenity %>"
+                    <%= editing && home.amenities && home.amenities.includes(amenity) ? 'checked' : '' %>>
+                  <span class="capitalize"><%= amenity %></span>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+
+          <!-- ================= NEW PART START ================= -->
+
+          <!-- ✅ SHOW EXISTING IMAGES -->
+          <% if (editing && home.photo && home.photo.length > 0) { %>
+            <div class="mb-6">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-images text-green-500 mr-2"></i>Current Images
+              </label>
+
+              <div class="flex gap-3 flex-wrap">
+                <% home.photo.forEach(img => { %>
+                  <img 
+                    src="<%= img %>" 
+                    alt="Home Image"
+                    class="w-24 h-24 object-cover rounded-lg border shadow"
+                  />
                 <% }) %>
               </div>
             </div>
+          <% } %>
 
-            <!-- Photo URL -->
-            <div class="mb-6">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">
-                <i class="fas fa-image text-blue-500 mr-2"></i>Photo file
-              </label>
-               <!-- //In this we have choosen file type, multiple means user can choose multiple files, and it can allow only those files which i mentioned in the accept -->
-              <input type="file" name="photos" multiple accept="image/jpg, image/jpeg, image/png" <%= editing ? '' : 'required' %>
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200" />
-              <p class="text-xs text-gray-500 mt-1">Use a high-quality image (JPG, PNG, JPEG)</p>
-            </div>
+          <!-- ================= NEW PART END ================= -->
 
-            <!-- Description -->
-            <div class="mb-8">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">
-                <i class="fas fa-pencil-alt text-purple-500 mr-2"></i>Description
-              </label>
-              <textarea name="description" placeholder="Describe your home... Mention amenities, special features, house rules, etc." 
-                rows="5" required
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition duration-200 resize-none"><%= editing ? home.description : '' %></textarea>
-              <p class="text-xs text-gray-500 mt-1">Be descriptive! This helps guests choose your home.</p>
-            </div>
-
-            <!-- Form Actions -->
-            <div class="flex gap-4">
-              <button type="submit" 
-                class="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold py-3 px-6 rounded-lg hover:shadow-lg hover:from-red-600 hover:to-red-700 transition duration-300 flex items-center justify-center gap-2">
-                <i class="fas <%= editing ? 'fa-check-circle' : 'fa-plus-circle' %>"></i>
-                <%= editing ? 'Update Home' : 'Add Home' %>
-              </button>
-              <a href="/host/host-home-list" 
-                class="flex-1 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center justify-center gap-2">
-                <i class="fas fa-times-circle"></i>
-                Cancel
-              </a>
-            </div>
-          </form>
-        </div>
-
-        <!-- Info Section -->
-        <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div class="bg-blue-50 rounded-xl p-6 border-l-4 border-blue-500">
-            <h3 class="font-bold text-blue-900 mb-2 flex items-center gap-2">
-              <i class="fas fa-lightbulb"></i> Pro Tip
-            </h3>
-            <p class="text-sm text-blue-700">Use clear, high-quality photos and write detailed descriptions to increase booking rates.</p>
+          <!-- Upload new images -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fas fa-image text-blue-500 mr-2"></i>Upload New Images
+            </label>
+            <input type="file" name="photos" multiple accept="image/jpg, image/jpeg, image/png"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg" />
           </div>
-          <div class="bg-green-50 rounded-xl p-6 border-l-4 border-green-500">
-            <h3 class="font-bold text-green-900 mb-2 flex items-center gap-2">
-              <i class="fas fa-check-circle"></i> Requirements
-            </h3>
-            <p class="text-sm text-green-700">All fields are required. Ensure your pricing is competitive and rating is accurate.</p>
+
+          <!-- Description -->
+          <div class="mb-8">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+            <textarea name="description" rows="5" required
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg"><%= editing ? home.description : '' %></textarea>
           </div>
-        </div>
+
+          <!-- Buttons -->
+          <div class="flex gap-4">
+            <button type="submit"
+              class="flex-1 bg-red-500 text-white py-3 rounded-lg font-bold">
+              <%= editing ? 'Update Home' : 'Add Home' %>
+            </button>
+            <a href="/host/host-home-list"
+              class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg text-center font-bold">
+              Cancel
+            </a>
+          </div>
+
+        </form>
       </div>
-    </main>
+    </div>
+  </main>
 
-  </body>
-
-  </html>
+</body>
+</html>
