@@ -1,6 +1,7 @@
 const express = require("express");
 const hostController = require("../controllers/hostController");
-const upload = require("../utils/multer");
+const upload = require("../utils/multerCloudinary");
+
 
 const hostRouter = express.Router();
 

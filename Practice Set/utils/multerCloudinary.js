@@ -3,13 +3,12 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("./cloudinary");
 
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
+  cloudinary,
   params: {
-    folder: "elitedwell_homes",
-    allowed_formats: ["jpg", "png", "jpeg", "webp"],
+    folder: "elite-dwell",
+    allowed_formats: ["jpg", "jpeg", "png"],
   },
 });
 
 const upload = multer({ storage });
-
 module.exports = upload;

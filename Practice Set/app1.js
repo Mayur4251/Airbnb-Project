@@ -11,10 +11,8 @@ const fs = require("fs");
 const express = require("express");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
-const multer = require("multer");
 const mongoose = require("mongoose");
 const flash = require("connect-flash");
-const upload = require("./utils/multer");
 
 
 // ================= LOCAL MODULES =================
@@ -46,49 +44,12 @@ store.on("error", (err) => {
   console.error("Session store error:", err);
 });
 
-// ================= MULTER CONFIG =================
-const randomString = (length) => {
-  const chars = "abcdefghijklmnopqrstuvwxyz";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(rootDir, "uploads");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, randomString(10) + "-" + file.originalname);
-  },
-});
-
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-app1.use(upload.array("photos", 5));
 
 // ================= GLOBAL MIDDLEWARE =================
 app1.use(express.urlencoded({ extended: true }));
 app1.use(express.json());
 
 app1.use(express.static(path.join(__dirname, "public")));
-app1.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ================= SESSION =================
 app1.use(
