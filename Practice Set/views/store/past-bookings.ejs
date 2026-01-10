@@ -27,8 +27,7 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               <% pastBookings.forEach(booking=> { %>
                 <div class="bg-white rounded-lg shadow overflow-hidden">
-                  <img src="/uploads/<%= booking.homeId.photo[0] %>" alt="<%= booking.homeId.houseName %>"
-                    class="w-full h-64 object-cover" />
+                  <img src="<%= home.photo[0] %>" class="w-full h-80 object-cover rounded-xl">
                   <div class="p-4">
                     <h3 class="font-semibold text-lg">
                       <%= booking.homeId.houseName %>
