@@ -23,7 +23,7 @@
             
             <!-- Image with overlay -->
             <a href="/homes/<%= home._id %>" class="block relative overflow-hidden">
-                  <img src="<%= (home.photo && home.photo.length) ? ('/uploads/' + home.photo[0]) : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
+                  <img src="<%= (home.photo && home.photo.length) ? home.photo[0] : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
                     alt="<%= home.houseName %>"
                     class="w-full h-52 sm:h-48 object-cover transition-transform duration-300 group-hover:scale-110">
 
