@@ -22,13 +22,16 @@
               <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                 <% if (home.photo && home.photo.length> 0) { %>
                   <div class="relative">
-                    <img src="/uploads/<%= home.photo[0] %>" alt="Home Image">
+                    <img
+                      src="<%= (home.photo && home.photo.length) ? home.photo[0] : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
+                      alt="<%= home.houseName %>" class="w-full h-48 object-cover" />
+
                     <% if (home.photo.length> 1) { %>
                       <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
                         <% home.photo.forEach((photo, index)=> { %>
                           <button onclick="changeImage('<%= photo %>', '<%= index %>')"
                             class="w-16 h-16 rounded-lg overflow-hidden border-2 border-white <%= index === 0 ? 'ring-2 ring-red-500' : '' %>">
-                           <<img src="/uploads/<%= home.photo[0] %>" alt="Home Image">
+                            <img src="<%= home.photo[0] %>" class="w-full h-80 object-cover rounded-xl">
                           </button>
                           <% }) %>
                       </div>
@@ -54,7 +57,7 @@
                 <div class="flex items-center gap-4 flex-wrap">
                   <div class="flex items-center gap-1">
                     <i class="fas fa-star text-yellow-400"></i>
-                    
+
                     <span class="font-semibold">
                       <%= (typeof avgRating !=='undefined' && avgRating) ? avgRating.toFixed(1) : '0' %>
                     </span>
@@ -193,17 +196,20 @@
                           <a href="/homes/<%= relatedHome._id %>"
                             class="flex gap-4 p-4 border-2 border-gray-200 rounded-lg hover:border-red-500 transition">
                             <img
-                              src="<%= (relatedHome.photo && relatedHome.photo.length) ? ('/uploads/' + relatedHome.photo[0]) : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
-                              alt="<%= relatedHome.houseName %>" class="w-24 h-24 object-cover rounded-lg">
-                            <div class="flex-1">
-                              <h3 class="font-semibold text-gray-900">
-                                <%= relatedHome.houseName %>
-                              </h3>
-                              <p class="text-sm text-gray-600">
-                                <%= relatedHome.location %>
-                              </p>
-                              <p class="text-red-600 font-bold">₹<%= relatedHome.price %>/night</p>
-                            </div>
+                              src="<%= (home.photo && home.photo.length) ? home.photo[0] : 'https://news.airbnb.com/wp-content/uploads/sites/4/2022/09/AIRBNB-Yuvraj-Singh_Image-01_PDP.jpg' %>"
+                              alt="<%= home.houseName %>" class="w-full h-48 object-cover" />
+                            />
+
+                            alt="<%= relatedHome.houseName %>" class="w-24 h-24 object-cover rounded-lg">
+                              <div class="flex-1">
+                                <h3 class="font-semibold text-gray-900">
+                                  <%= relatedHome.houseName %>
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                  <%= relatedHome.location %>
+                                </p>
+                                <p class="text-red-600 font-bold">₹<%= relatedHome.price %>/night</p>
+                              </div>
                           </a>
                           <% }) %>
                       </div>
